@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<extension version="3.0" type="plugin" group="system" method="upgrade">
+    <name>PLG_SYSTEM_MATWARE</name>
+    <author>Matware</author>
+    <creationDate>June 2013</creationDate>
+    <copyright>Copyright (C) 2004 - 2014 Matware. All rights reserved.</copyright>
+    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+    <authorEmail>support@matware.com.ar</authorEmail>
+    <authorUrl>www.matware.com.ar</authorUrl>
+    <version>1.0.0</version>
+    <description>PLG_SYSTEM_MATWARE_XML_DESCRIPTION</description>
+
+    <files>
+        <filename>index.html</filename>
+        <filename plugin="matware">matware.php</filename>
+    </files>
+
+    <languages folder="language">
+        <language tag="en-GB">en-GB/en-GB.plg_system_matware.ini</language>
+        <language tag="en-GB">en-GB/en-GB.plg_system_matware.sys.ini</language>
+    </languages>
+</extension>

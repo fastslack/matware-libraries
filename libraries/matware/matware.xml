@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="library" method="upgrade" version="2.5">
+
+  <name>Matware - Libraries</name>
+	<libraryname>matware</libraryname>
+  <author>Matware</author>
+  <creationDate>June 2011</creationDate>
+  <copyright>Copyright (C) 2004 - 2014 Matware. All rights reserved.</copyright>
+  <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+  <authorEmail>support@matware.com.ar</authorEmail>
+  <authorUrl>www.matware.com.ar</authorUrl>
+  <version>1.0.0</version>
+	<description>Matware Libraries</description>
+
+	<files>
+		<filename>bootstrap.php</filename>
+		<filename>matware.xml</filename>
+		<folder>client</folder>
+		<folder>oauth2</folder>
+		<folder>socket</folder>
+	</files>
+</extension>

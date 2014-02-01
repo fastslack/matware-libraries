@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="package" version="2.5" method="upgrade">
+		<name>Matware</name>
+		<packagename>matware</packagename>
+		<author>Matware</author>
+		<creationDate>June 2011</creationDate>
+		<copyright>Copyright (C) 2004 - 2014 Matware. All rights reserved.</copyright>
+		<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+		<authorEmail>support@matware.com.ar</authorEmail>
+		<authorUrl>www.matware.com.ar</authorUrl>
+		<version>1.0.0</version>
+
+    <!-- packages to install -->
+    <files>
+        <!-- Libraries -->
+        <file type="library" id="matware">libraries/matware</file>
+    </files>
+
+    <!-- Plugins to install with the component -->
+    <plugins>
+        <!-- System plugins -->
+        <plugin name="matware" group="system"/>
+    </plugins>
+</extension>

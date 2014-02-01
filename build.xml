@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Matware" default="site" basedir=".">
+    <!-- Do initialization stuff -->
+    <target name="site" >
+        <property file="build.properties"  override="true"/>
+        <property name="matware.src" value="./" />
+        <property name="extension" value="${comp.name}" />
+        <if>
+            <equals arg1="${extension}" arg2="" />
+            <then>
+                <fail message="Extension not specified, use -Dextension=EXTENSION" />
+            </then>
+            <else>
+                <phingcall target="Matware" />
+            </else>
+        </if>
+    </target>
+
+    <target name="Matware" description="Copies files to a existing joomla site">
+        <echo message="---------------- प्यार  Matware प्यार ----------------"/>
+
+        <!-- Libraries -->
+        <copy todir="${www.dir}/libraries" overwrite="true">
+            <fileset dir="${matware.src}/libraries">
+                <include name="**" />
+            </fileset>
+        </copy>
+
+        <!-- For discover install we need to place the libraries manifests in the right folder -->
+        <echo message="Copying library manifiest..." />
+        <copy file="${matware.src}/libraries/${extension}/${extension}.xml"
+            tofile="${www.dir}/administrator/manifests/libraries/${extension}.xml" overwrite="true" />
+
+        <!-- Copy Package Manifest -->
+        <echo message="Copying package manifiest..." />
+        <copy file="${matware.src}/pkg_${extension}.xml"
+            tofile="${www.dir}/administrator/manifests/packages/pkg_${extension}.xml" overwrite="true" />
+
+        <!-- Plugins -->
+        <copy todir="${www.dir}/plugins" overwrite="true">
+            <fileset dir="${matware.src}/plugins">
+                <include name="**" />
+            </fileset>
+        </copy>
+
+        <!-- Plugins - Languages -->
+        <copy todir="${www.dir}/administrator/language" overwrite="true">
+            <fileset dir="${matware.src}/plugins/system/matware/language">
+                <include name="**" />
+            </fileset>
+        </copy>
+
+    </target>
+
+</project>
