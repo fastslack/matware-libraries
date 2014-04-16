@@ -3,7 +3,7 @@
  * @version       $Id: 
  * @package       Matware.Libraries
  * @subpackage    MSocket
- * @copyright     Copyright (C) 1996 - 2011 Matware - All rights reserved.
+ * @copyright     Copyright (C) 2004 - 2014 Matware - All rights reserved.
  * @author        Matias Aguirre
  * @email         maguirre@matware.com.ar
  * @link          http://www.matware.com.ar/
