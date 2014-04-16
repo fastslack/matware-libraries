@@ -15,6 +15,8 @@ defined('_JEXEC') or die;
 jimport('cms.html.html');
 jimport('joomla.user.helper');
 
+JLoader::register('MOauth2Server', JPATH_LIBRARIES.'/matware/oauth2/server.php');
+
 /**
  * OAuth2 Authentication Plugin
  *
@@ -46,7 +48,7 @@ class PlgAuthenticationOAuth2 extends JPlugin
 		// Load the Joomla! application
 		$app = JFactory::getApplication();
 		// Get the OAuth2 server instance
-		$oauth_server = new MOAuth2Server;
+		$oauth_server = new MOauth2Server;
 
 		if ($oauth_server->listen())
 		{
