@@ -1,7 +1,7 @@
 Matware Libraries for Joomla!
 =================
 
-This libraries add some features to the vest CMS of the World, Joomla!.
+This libraries add some features to the best CMS of the World, Joomla!.
 
 OAuth2 Authentication
 ---------------------
