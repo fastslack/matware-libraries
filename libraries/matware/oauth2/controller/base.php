@@ -11,6 +11,8 @@
  */
 defined('JPATH_PLATFORM') or die;
 
+JLoader::register('MOauth2Client', JPATH_LIBRARIES.'/matware/oauth2/client.php');
+
 /**
  * OAuth Controller class for initiating temporary credentials for the Matware.Libraries.
  *
