@@ -307,19 +307,21 @@ class MClientOauth2
 	 * @since 	1.0
 	 * @throws	Exception
 	 */
-	public function getResource($token, $client_id = null)
+	public function getResource($options = array())
 	{
 		// Get the headers
 		$data = $this->getPostData();
 
-		$client_id = isset($client_id) ? $client_id : $data['oauth_client_id'];
+		$options['oauth_client_id'] = !empty($options['oauth_client_id']) ? $options['oauth_client_id'] : $data['oauth_client_id'];
 
 		// Add GET parameters to URL
-		$url = $this->options->get('url') . "?oauth_access_token={$token}&oauth_client_id={$client_id}";
+		$url_query = http_build_query($options);
+		$url = $this->options->get('url') . "?{$url_query}";
 
 		// Send the request
 		$response = $this->http->get($url, $this->getRestHeaders());
 
+		// Check the response
 		if ($response->code >= 200 && $response->code < 400)
 		{
 			return $response->body;
