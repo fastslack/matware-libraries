@@ -11,6 +11,8 @@
  */
 defined('JPATH_PLATFORM') or die;
 
+JLoader::register('MOauth2Credentials', JPATH_LIBRARIES.'/matware/oauth2/credentials.php');
+
 /**
  * OAuth Controller class for converting authorised credentials to token credentials for the Matware.Libraries.
  *
