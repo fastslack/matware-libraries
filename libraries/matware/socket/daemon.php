@@ -11,14 +11,14 @@
  */
 defined('JPATH_PLATFORM') or die;
 
-jimport('joomla.socket.socket');
+jimport('matware.socket.socket');
 
 /**
  * MSocketDaemon Class
  *
  * @package     Matware.Libraries
  * @subpackage  MSocket
- * @since       11.1
+ * @since       1.0
  */
 class MSocketDaemon extends MSocket
 {

@@ -12,18 +12,6 @@
 // No direct access
 defined('_JEXEC') or die;
 
-// Concrete classes.
-JLoader::register('MWebsocketUser', __DIR__.'/websocket/user.php');
-
-// Interfaces.
-JLoader::register('MWebsocketController', __DIR__.'/websocket/controller.php');
-JLoader::register('MWebsocketHandshake', __DIR__.'/websocket/handshake.php');
-JLoader::register('MWebsocketProtocol', __DIR__.'/websocket/protocol.php');
-
-// Adapters.
-JLoader::discover('MWebsocketHandshake', __DIR__.'/websocket/handshakes');
-JLoader::discover('MWebsocketProtocol', __DIR__.'/websocket/protocols');
-
 /**
  * WebSocket implements the basic websocket protocol handling initial handshaking and also
  * dispatching requests up to the clients bound to the socket.
@@ -91,11 +79,20 @@ class MWebsocket extends MSocketDaemon
 
 		$users = array();
 
+		$this->_sockets = array(
+			$this->link
+		);
+
 		// The main process
 		while (true)
 		{
+			// Initialise vars
+			$write = NULL;
+			$except = NULL;
+
 			$changed = $this->_sockets;
-			socket_select($changed, $write = NULL, $except = NULL, NULL);
+			socket_select($changed, $write, $except, NULL);
+
 			foreach ($changed as $socket)
 			{
 				try
@@ -175,7 +172,7 @@ class MWebsocket extends MSocketDaemon
 		// Lets check which handshaker we need
 		if (isset($headers['Sec-WebSocket-Version']))
 		{
-			if ($headers['Sec-WebSocket-Version'] === '8')
+			if ($headers['Sec-WebSocket-Version'] === '13')
 			{
 				// This is the HyBI handshaker
 				return new MWebsocketHandshakeHyBi();
@@ -304,7 +301,7 @@ class MWebsocket extends MSocketDaemon
 	/**
 	 * Takes the appropriate action to close the connection down
 	 */
-	private function sendFatalErrorResponse()
+	private function sendFatalErrorResponse(MWebsocketUser $user)
 	{
 		// Just close the socket if in handhake mode
 		if (!$user->handshakeDone())

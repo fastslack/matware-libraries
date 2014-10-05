@@ -30,6 +30,7 @@ class MWebsocketProtocol76 implements MWebsocketProtocol
 		$out = array();
 
 		$bytes = @socket_recv($this->socket, $buffer, 2048, 0);
+
 		if ($bytes == 0)
 		{
 			throw new UnexpectedValueException('Request empty');

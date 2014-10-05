@@ -100,10 +100,6 @@ class MSocket
 		if(($this->link = socket_create($this->domain, $this->type, $this->protocol)) === false) {
 			throw new JException("Unable to create Socket. PHP said, " . $this->getLastError(), socket_last_error());
 		}
-
-		$this->_sockets = array(
-			$this->link
-		);
 	}
 
 	/**
