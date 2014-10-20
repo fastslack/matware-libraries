@@ -244,7 +244,7 @@ class JFormFieldMSQL extends JFormFieldList
 		if (!empty($header))
 		{
 			$header_title = JText::_($header);
-			$options[] = JHtml::_('select.option', '', '- '. $header_title . ' -');
+			$options[] = JHtml::_('select.option', '', $header_title);
 		}
 
 		// Build the field options.
