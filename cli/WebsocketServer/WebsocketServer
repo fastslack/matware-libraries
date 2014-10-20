@@ -1,0 +1,240 @@
+#!/usr/bin/php
+<?php
+/**
+ * @version       $Id: 
+ * @package       Matware
+ * @subpackage    WebsocketServer
+ * @copyright     Copyright (C) 1996 - 2014 Matware - All rights reserved.
+ * @author        Matias Aguirre
+ * @email         maguirre@matware.com.ar
+ * @link          http://www.matware.com.ar/
+ * @license       GNU/GPL http://www.gnu.org/licenses/gpl-2.0-standalone.html
+ */
+define( '_JEXEC', 1 );
+
+// Bootstrap the application.
+require dirname(__FILE__).'/configuration.php';
+require dirname(dirname(__FILE__)).'/bootstrap.php';
+
+final class WebsocketServer extends ApiApplicationWeb implements MWebsocketController 
+{
+	/**
+	* Address
+	*
+	* @var string
+	* @since 1.0
+	*/
+	public $address = '0.0.0.0';
+
+	/**
+	* Port
+	*
+	* @var int
+	* @since 1.0
+	*/
+	public $port = 8080;
+
+	/**
+	* A database object for the application to use.
+	*
+	* @var JDatabase
+	* @since 1.0
+	*/
+	protected $_db = null;
+
+	/**
+	* A protocol object
+	*
+	* @var MWebsocketProtocol
+	* @since 1.0
+	*/
+	private $_protocol;
+
+	/**
+	 * Class constructor.
+	 *
+	 * @return  void
+	 *
+	 * @since 1.0
+	 */
+	public function __construct(JRegistry $options = null)
+	{
+		// TODO: Fix prevent Joomla! libraries error
+		// PHP Notice:  Undefined index: HTTP_HOST
+		$_SERVER['HTTP_HOST'] = null;
+
+		// Call the parent __construct method so it bootstraps the application class.
+		parent::__construct();
+
+		// Add the logger.
+		JLog::addLogger(
+			// Pass an array of configuration options
+			array(
+				// Set the name of the log file
+				'text_file' => JPATH_SITE.'/logs/WebSocketCrossfitStats.log.php'
+			)
+		);
+
+		// Set the custom options if exists
+		$this->options = isset($options) ? $options : new JRegistry(new JConfig);
+
+		// Creating first dabatase instance
+		$this->_db = JFactory::getDBO();
+
+		// Execute the application.
+		$this->loadSession()
+			->loadIdentity()
+			->loadDispatcher()
+			->fetchStandardMaps()
+			->loadRouter();
+	}
+
+	/**
+	 * Execute the application.
+	 *
+	 * The 'execute' method is the entry point for a command line application.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.0
+	 * @throws  RuntimeException
+	 */
+	public function doExecute()
+	{
+		// Send a string to standard output.
+		//$this->out('Starting server...');
+
+		// Start the server
+		MWebSocket::getInstance($this)->start();
+	}
+
+	/**
+	 * Execute the application.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.0
+	 */
+	public function execute()
+	{
+		// Perform application routines.
+		$this->doExecute();
+	}
+
+	/**
+	 * Allows the application to load a custom or default router.
+	 *
+	 * @param   JApplicationWebRouter  $router  An optional router object. If omitted, the standard router is created.
+	 *
+	 * @return  object This method may be chained.
+	 *
+	 * @since   1.0
+	 */
+	public function loadRouter(JApplicationWebRouter $router = null)
+	{
+		$this->router = ($router === null) ? new MApplicationWebRouterWebsocket($this, $this->input) : $router;
+
+		return $this;
+	}
+
+	/**
+	 * Called whenever there is a message from a client
+	 * $msg is an array with the following structure
+	 *  Array {
+	 * 		'size': The size in bytes of the data frame
+	 * 		'frame': A buffer containing the data received
+	 * 		'binary': boolean indicator true is frame is binary false if frame is utf8
+	 *  }
+	 */
+	function onMessage($msg)
+	{
+		$size = $msg['size'];
+		$data = $msg['frame'];
+
+		echo ".";
+		usleep(500000);
+
+		$documentOptions = array(
+			'absoluteHrefs' => $this->get('absoluteHrefs', false),
+		);
+
+		try
+		{
+			// Set the controller prefix, add maps, and execute the appropriate controller.
+			$this->input = new JInputJson;
+
+			$this->document = new ApiDocumentHalJson($documentOptions);
+
+			return $this->router->setDefaultController('Root')
+				->setControllerPrefix('ComponentMets')
+				->addMaps($this->maps)
+				->execute($data);
+		}
+		catch (Exception $e)
+		{
+			$this->setHeader('status', '400', true);
+			$message = $e->getMessage();
+			$body = array('message' => $message, 'code' => $e->getCode(), 'type' => get_class($e));
+
+			$this->setBody(json_encode($body));
+		}
+	}
+
+	/**
+	 * Called when the client closes connection
+	 */
+	function onClose()
+	{
+		$message = 'Socket connection closing.';
+		// Stdin output
+		$this->out($message);
+		// Log
+		JLog::add($message, JLog::INFO, 'WebSocketExample');
+	}
+
+	/**
+	 * Called in the event of an error.
+	 */
+	function onError($err)
+	{
+		$message = 'Socket error.';
+		// Stdin output
+		$this->out($message);
+		// Log
+		JLog::add($message, JLog::INFO, 'WebSocketExample');
+	}
+
+	/**
+	 * Set the set the Websocket protocol class
+	 * over which this application is being called
+	 * This is needed for the application to send data back
+	 * to the client
+	 */
+	function setProtocol(MWebSocketProtocol $protocol)
+	{
+		$this->_protocol = $protocol;
+	}
+
+	/**
+	 * Print
+	 */
+	function out($message)
+	{
+		echo "$message\n";
+	}
+
+}
+
+// Wrap the execution in a try statement to catch any exceptions thrown anywhere in the script.
+try
+{
+	// Instantiate the application object, passing the class name to JApplicationWeb::getInstance
+	// and use chaining to execute the application.
+	JApplicationWeb::getInstance('WebsocketServer')->execute();
+}
+catch (Exception $e)
+{
+	// An exception has been caught, just echo the message.
+	fwrite(STDOUT, $e->getMessage() . "\n");
+	exit($e->getCode());
+}
