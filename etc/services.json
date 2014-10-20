@@ -1,0 +1,6 @@
+{
+	"joomla:categories":"CategoriesList",
+	"joomla:categories/:id":"Categories",
+	"joomla:menuitems":"MenuitemsList",
+	"joomla:menuitems/:id":"Menuitems"
+}
