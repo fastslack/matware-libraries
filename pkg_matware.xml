@@ -11,14 +11,11 @@
 		<version>1.0.0</version>
 
     <!-- packages to install -->
-    <files>
-        <!-- Libraries -->
-        <file type="library" id="matware">libraries/matware</file>
-    </files>
+		<files folder="packages">
+			<file type="component" id="webservices" >com_webservices.zip</file>
+			<file type="library" id="matware">lib_matware.zip</file>
+			<file type="plugin" id="matware" group="system">plg_sys_matware.zip</file>
+			<file type="plugin" id="oauth2" group="authentication">plg_auth_oauth2.zip</file>
+		</files>
 
-    <!-- Plugins to install with the component -->
-    <plugins>
-        <!-- System plugins -->
-        <plugin name="matware" group="system"/>
-    </plugins>
 </extension>
