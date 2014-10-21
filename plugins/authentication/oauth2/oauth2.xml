@@ -9,14 +9,17 @@
 	<authorUrl>www.matware.com.ar</authorUrl>
 	<version>1.0</version>
 	<description>PLG_OAUTH2_XML_DESCRIPTION</description>
+
 	<files>
 		<filename plugin="oauth2">oauth2.php</filename>
 		<filename>index.html</filename>
 	</files>
-	<languages>
+
+	<languages folder="language">
 		<language tag="en-GB">en-GB.plg_authentication_oauth2.ini</language>
 		<language tag="en-GB">en-GB.plg_authentication_oauth2.sys.ini</language>
 	</languages>
+
 	<config>
 		<fields name="params">
 
