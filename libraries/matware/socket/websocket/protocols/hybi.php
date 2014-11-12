@@ -75,7 +75,7 @@ class MWebsocketProtocolHyBi implements MWebsocketProtocol
 			{
 				if ($result['done'] === false)
 				{
-					logToFile($this->socket . "Parser Error");
+					//logToFile($this->socket . "Parser Error");
 					$out['size'] = -1;
 					$out['frame'] = "";
 					$out['binary'] = false;
@@ -372,7 +372,7 @@ class MWebsocketProtocolHyBi implements MWebsocketProtocol
 		if ($this->state === -1)
 		{
 			// There has been a problem with the data we received so bail.
-			logToFile($this->socket . "Problem with parsing the data received");
+			//logToFile($this->socket . "Problem with parsing the data received");
 			$result['done'] = false;
 			$result['size'] = -1;
 			return $result;
