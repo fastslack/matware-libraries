@@ -95,10 +95,12 @@ class MWebsocketProtocol76 implements MWebsocketProtocol
 				$packet .= $data['frame'][$i];
 			}
 		}
+
 		$packet .= pack('C', 0xff);
 		$bytesSent = socket_write($this->socket, $packet, strlen($packet));
+
 		echo "\nBytes sent = $bytesSent";
-		var_dump($data);
+
 		return $bytesSent;
 	}
 

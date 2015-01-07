@@ -294,7 +294,6 @@ class MWebsocket extends MSocketDaemon
 			}
 		}
 
-		//var_dump($headerdata);
 		return $headerdata;
 	}
 

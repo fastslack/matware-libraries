@@ -321,7 +321,7 @@ class MClientOauth2
 		// Send the request
 		$response = $this->http->get($url, $this->getRestHeaders());
 
-                // Check the response
+		// Check the response
 		if ($response->code >= 200 && $response->code < 400)
 		{
 			return $response->body;

@@ -175,17 +175,22 @@ class JFormFieldMSQL extends JFormFieldList
 	{
 		// Get the database object.
 		$db = JFactory::getDbo();
+
 		// Get the query object
 		$query = $db->getQuery(true);
+
 		// Select fields
 		$query->select($conditions['select']);
+
 		// From selected table
 		$query->from($conditions['from']);
+
 		// Join over the groups
 		if (!empty($conditions['join']))
 		{
 			$query->join('LEFT', $conditions['join']);
 		}
+
 		// Group by
 		if (!empty($conditions['group']))
 		{
