@@ -65,8 +65,11 @@ class MWebsocket extends MSocketDaemon
 		{
 			array_splice($this->_users, $found, 1);
 		}
+
 		$index = array_search($socket, $this->_sockets);
+
 		socket_close($socket);
+
 		if ($index >= 0)
 		{
 			array_splice($this->_sockets, $index, 1);
@@ -134,7 +137,7 @@ class MWebsocket extends MSocketDaemon
 		$bytes = @socket_recv($socket, $buffer, 2048, 0);
 		if ($bytes == 0)
 		{
-			MWebsocket::getInstance()->disconnect($socket);
+			MWebsocket::getInstance($this->_controller)->disconnect($socket);
 			JLog::add($socket . ' DISCONNECTED!', JLog::INFO, 'WebSocket');
 			return;
 		}
@@ -144,13 +147,13 @@ class MWebsocket extends MSocketDaemon
 		if (count($headers) == 0 || !isset($headers['Upgrade']))
 		{
 			// Not good send back an error status
-			$this->sendFatalErrorResponse();
+			$this->sendFatalErrorResponse($user);
 		}
 		else
 		{
 			if (strtolower($headers['Upgrade']) != 'websocket')
 			{
-				$this->sendFatalErrorResponse();
+				$this->sendFatalErrorResponse($user);
 			}
 			// now get the handshaker for this request
 			$hs = $this->getHandshake($headers);
@@ -241,7 +244,7 @@ class MWebsocket extends MSocketDaemon
 				}
 				else
 				{
-					$this->_controller->onError();
+					$this->_controller->onError('Error handling request!');
 					// badness must close
 					$protocol->close();
 					$this->disconnect($socket);
@@ -251,7 +254,7 @@ class MWebsocket extends MSocketDaemon
 			}
 			else
 			{
-				$this->sendFatalErrorResponse();
+				$this->sendFatalErrorResponse($user);
 				return;
 			}
 		}
@@ -305,7 +308,7 @@ class MWebsocket extends MSocketDaemon
 		// Just close the socket if in handhake mode
 		if (!$user->handshakeDone())
 		{
-			MWebsocket::getInstance()->disconnect($user->socket());
+			MWebsocket::getInstance($this->_controller)->disconnect($user->socket());
 			return;
 		}
 		else
