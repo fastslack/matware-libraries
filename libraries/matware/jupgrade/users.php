@@ -40,6 +40,59 @@ class JUpgradeproUser extends JUpgradepro
 	);
 
 	/**
+	 * Method to do pre-processes modifications before migrate
+	 *
+	 * @return      boolean Returns true if all is fine, false if not.
+	 * @since       3.2.0
+	 * @throws      Exception
+	 */
+	public function beforeHook()
+	{
+		// Get the data
+		$query = $this->_db->getQuery(true);
+		$query->select("u.username");
+		$query->from("#__users AS u");
+		$query->join("JOIN", "#__user_usergroup_map AS um ON um.user_id = u.id");
+		$query->join("JOIN", "#__usergroups AS ug ON ug.id = u.group_id");
+		$query->order('id ASC');
+		$query->limit(1);
+
+		$this->_db->setQuery($query);
+
+		try {
+			$superuser = $this->_db->loadResult();
+		} catch (RuntimeException $e) {
+			throw new RuntimeException($e->getMessage());
+		}
+
+		// Update the super user id to 2147483647
+		$query->clear();
+		$query->update("#__users");
+		$query->set("`id` = 2147483647");
+		$query->where("username = '{$superuser}'");
+
+		// Execute the query
+		try {
+			$this->_db->setQuery($query)->execute();
+		} catch (RuntimeException $e) {
+			throw new RuntimeException($e->getMessage());
+		}
+
+		// Update the user_usergroup_map
+		$query->clear();
+		$query->update("#__user_usergroup_map");
+		$query->set("`user_id` = 2147483647");
+		$query->where("`group_id` = 8");
+
+		// Execute the query
+		try {
+			$this->_db->setQuery($query)->execute();
+		} catch (RuntimeException $e) {
+			throw new RuntimeException($e->getMessage());
+		}
+	}
+
+	/**
 	 * Get the mapping of the old usergroups to the new usergroup id's.
 	 *
 	 * @return	array	An array with keys of the old id's and values being the new id's.

@@ -22,57 +22,6 @@ JLoader::register("JUpgradeproUser", JPATH_LIBRARIES."/matware/jupgrade/users.ph
  */
 class JUpgradeproUsers extends JUpgradeproUser
 {
-
-	/**
-	 * Method to do pre-processes modifications before migrate
-	 *
-	 * @return	boolean	Returns true if all is fine, false if not.
-	 * @since	3.2.0
-	 * @throws	Exception
-	 */
-	public function beforeHook()
-	{
-		// Getting the data
-		$query = $this->_db->getQuery(true);
-		$query->select("username");
-		$query->from("#__users");
-		$query->where("name = 'Super User'");
-		//$query->where("name = 'Super User'");
-		$query->order('id ASC');
-		$query->limit(1);
-		$this->_db->setQuery($query);
-
-		try {
-			$superuser = $this->_db->loadResult();
-		} catch (RuntimeException $e) {
-			throw new RuntimeException($e->getMessage());
-		}
-
-		// Updating the super user id to 10
-		$query->clear();
-		$query->update("#__users");
-		$query->set("`id` = 2147483647");
-		$query->where("username = '{$superuser}'");
-		// Execute the query
-		try {
-			$this->_db->setQuery($query)->execute();
-		} catch (RuntimeException $e) {
-			throw new RuntimeException($e->getMessage());
-		}
-
-		// Updating the user_usergroup_map
-		$query->clear();
-		$query->update("#__user_usergroup_map");
-		$query->set("`user_id` = 2147483647");
-		$query->where("`group_id` = 8");
-		// Execute the query
-		try {
-			$this->_db->setQuery($query)->execute();
-		} catch (RuntimeException $e) {
-			throw new RuntimeException($e->getMessage());
-		}
-	}
-
 	/**
 	 * Get the raw data for this part of the upgrade.
 	 *
