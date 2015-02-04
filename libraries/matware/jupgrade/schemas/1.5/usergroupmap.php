@@ -4,7 +4,7 @@
 *
 * @version $Id:
 * @package jUpgradePro
-* @copyright Copyright (C) 2004 - 2014 Matware. All rights reserved.
+* @copyright Copyright (C) 2004 - 2015 Matware. All rights reserved.
 * @author Matias Aguirre
 * @email maguirre@matware.com.ar
 * @link http://www.matware.com.ar/
@@ -42,6 +42,17 @@ class JUpgradeproUsergroupMap extends JUpgradeproUser
 		$conditions['order'] = "aro_id ASC";
 		
 		return $conditions;
+	}
+
+	/**
+	 * Method to do pre-processes modifications before migrate
+	 *
+	 * @return      boolean Returns true if all is fine, false if not.
+	 * @since       3.2.0
+	 * @throws      Exception
+	 */
+	public function beforeHook()
+	{
 	}
 
 	/**

@@ -50,17 +50,17 @@ class JUpgradeproUser extends JUpgradepro
 	{
 		// Get the data
 		$query = $this->_db->getQuery(true);
-		$query->select("u.username");
+		$query->select("u.id, u.username");
 		$query->from("#__users AS u");
-		$query->join("JOIN", "#__user_usergroup_map AS um ON um.user_id = u.id");
-		$query->join("JOIN", "#__usergroups AS ug ON ug.id = u.group_id");
-		$query->order('id ASC');
+		$query->join("LEFT", "#__user_usergroup_map AS um ON um.user_id = u.id");
+		$query->join("LEFT", "#__usergroups AS ug ON ug.id = um.group_id");
+		$query->order('u.id ASC');
 		$query->limit(1);
 
 		$this->_db->setQuery($query);
 
 		try {
-			$superuser = $this->_db->loadResult();
+			$superuser = $this->_db->loadObject();
 		} catch (RuntimeException $e) {
 			throw new RuntimeException($e->getMessage());
 		}
@@ -69,7 +69,7 @@ class JUpgradeproUser extends JUpgradepro
 		$query->clear();
 		$query->update("#__users");
 		$query->set("`id` = 2147483647");
-		$query->where("username = '{$superuser}'");
+		$query->where("username = '{$superuser->username}'");
 
 		// Execute the query
 		try {
@@ -83,6 +83,7 @@ class JUpgradeproUser extends JUpgradepro
 		$query->update("#__user_usergroup_map");
 		$query->set("`user_id` = 2147483647");
 		$query->where("`group_id` = 8");
+		$query->where("`user_id` = {$superuser->id}");
 
 		// Execute the query
 		try {

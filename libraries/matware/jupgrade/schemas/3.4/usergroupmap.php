@@ -45,6 +45,17 @@ class JUpgradeproUsergroupMap extends JUpgradeproUser
 	}
 
 	/**
+	 * Method to do pre-processes modifications before migrate
+	 *
+	 * @return      boolean Returns true if all is fine, false if not.
+	 * @since       3.2.0
+	 * @throws      Exception
+	 */
+	public function beforeHook()
+	{
+	}
+
+	/**
 	 * Get the raw data for this part of the upgrade.
 	 *
 	 * @return	array
