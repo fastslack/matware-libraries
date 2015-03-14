@@ -1,85 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="component" version="3.0.0" method="upgrade">
-    <name>COM_WEBSERVICES</name>
-    <creationDate>Jul 2013</creationDate>
-    <author>Matias Aguirre</author>
-    <authorEmail>maguirre@matware.com.ar</authorEmail>
-    <authorUrl>http://www.matware.com.ar</authorUrl>
-    <copyright>Copyright 2004 - 2013 Matias Aguirre. All rights reserved.</copyright>
-    <license>GNU General Public License version 2 or later, see LICENSE.</license>
-    <version>1.0.0</version>
-    <description>COM_WEBSERVICES_DESC</description>
+<extension type="component" version="2.5.0" method="upgrade">
+	<name>COM_WEBSERVICES</name>
+	<creationDate>Jul 2013</creationDate>
+	<author>Matias Aguirre</author>
+	<authorEmail>maguirre@matware.com.ar</authorEmail>
+	<authorUrl>http://www.matware.com.ar</authorUrl>
+	<copyright>Copyright 2004 - 2015 Matias Aguirre. All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later, see LICENSE.</license>
+	<version>1.0.0</version>
+	<description>COM_WEBSERVICES_DESC</description>
 
-    <scriptfile>install.php</scriptfile>
-    <install folder="component/admin">
-        <sql>
-            <file driver="mysql" charset="utf8">sql/install/mysql/install.sql</file>
-            <file driver="mysqli" charset="utf8">sql/install/mysql/install.sql</file>
-        </sql>
-    </install>
-    <uninstall folder="component/admin">
-        <sql>
-            <file driver="mysql" charset="utf8">sql/install/mysql/uninstall.sql</file>
-            <file driver="mysqli" charset="utf8">sql/install/mysql/uninstall.sql</file>
-        </sql>
-    </uninstall>
-    <update folder="component/admin">
-        <schemas>
-            <schemapath type="mysql">sql/updates/mysql</schemapath>
-            <schemapath type="mysqli">sql/updates/mysql</schemapath>
-        </schemas>
-    </update>
-    <files folder="component/site">
-        <folder>controllers</folder>
-        <folder>helpers</folder>
-        <folder>models</folder>
-        <folder>views</folder>
-        <filename>LICENSE</filename>
-        <filename>controller.php</filename>
-        <filename>webservices.php</filename>
-    </files>
-    <media destination="com_webservices" folder="media/com_webservices">
-        <folder>css</folder>
-        <folder>images</folder>
-        <folder>js</folder>
-    </media>
-    <languages folder="component/site/language">
-        <language tag="en-GB">en-GB/en-GB.com_webservices.ini</language>
-    </languages>
+	<scriptfile>install.php</scriptfile>
 
-    <administration>
-        <menu>COM_WEBSERVICES</menu>
-        <submenu>
-            <menu view="credentials" link="option=com_webservices&amp;view=credentials">
-                COM_WEBSERVICES_CREDENTIALS
-            </menu>
-            <menu view="tokens" link="option=com_webservices&amp;view=tokens">COM_WEBSERVICES_TOKENS</menu>
-        </submenu>
-        <files folder="component/admin">
-            <folder>controllers</folder>
-            <folder>helpers</folder>
-            <folder>layouts</folder>
-            <folder>models</folder>
-            <folder>sql</folder>
-            <folder>tables</folder>
-            <folder>views</folder>
-            <filename>access.xml</filename>
-            <filename>config.xml</filename>
-            <filename>controller.php</filename>
-            <filename>webservices.php</filename>
-        </files>
-        <languages folder="component/admin/language">
-            <language tag="en-GB">en-GB/en-GB.com_webservices.ini</language>
-            <language tag="en-GB">en-GB/en-GB.com_webservices.sys.ini</language>
-        </languages>
-    </administration>
+	<install folder="admin">
+		<sql>
+			<file driver="mysql" charset="utf8">sql/install/mysql/install.sql</file>
+			<file driver="mysqli" charset="utf8">sql/install/mysql/install.sql</file>
+		</sql>
+	</install>
+	<uninstall folder="admin">
+		<sql>
+			<file driver="mysql" charset="utf8">sql/install/mysql/uninstall.sql</file>
+			<file driver="mysqli" charset="utf8">sql/install/mysql/uninstall.sql</file>
+		</sql>
+	</uninstall>
 
-    <!-- Modules to install with the component -->
-    <modules>
-        <!--module name="mod_webservices_sample" client="site" /-->
-    </modules>
-    <!-- Plugins to install -->
-    <plugins>
-        <!--plugin name="webservices" group="content" /-->
-    </plugins>
+	<administration>
+		<menu>COM_WEBSERVICES</menu>
+		<submenu>
+			<menu view="credentials" link="option=com_webservices&amp;view=checks">
+				COM_WEBSERVICES_CHECKS
+			</menu>
+			<menu view="credentials" link="option=com_webservices&amp;view=credentials">
+				COM_WEBSERVICES_CREDENTIALS
+			</menu>
+			<menu view="tokens" link="option=com_webservices&amp;view=tokens">
+				COM_WEBSERVICES_TOKENS
+			</menu>
+		</submenu>
+		<files folder="admin">
+			<folder>css</folder>
+			<folder>images</folder>
+			<folder>install</folder>
+			<folder>js</folder>
+			<folder>controllers</folder>
+			<folder>helpers</folder>
+			<folder>layouts</folder>
+			<folder>language</folder>
+			<folder>models</folder>
+			<folder>sql</folder>
+			<folder>tables</folder>
+			<folder>views</folder>
+			<filename>htaccess</filename>
+			<filename>install.php</filename>
+			<filename>access.xml</filename>
+			<filename>config.xml</filename>
+			<filename>controller.php</filename>
+			<filename>webservices.php</filename>
+		</files>
+		<languages folder="admin">
+			<language tag="en-GB">language/en-GB/en-GB.com_webservices.ini</language>
+			<language tag="en-GB">language/en-GB/en-GB.com_webservices.sys.ini</language>
+		</languages>
+	</administration>
+
+	<!-- Modules to install with the component -->
+	<modules>
+		<!--module name="mod_webservices_sample" client="site" /-->
+	</modules>
+	<!-- Plugins to install -->
+	<plugins>
+		<!--plugin name="webservices" group="content" /-->
+	</plugins>
 </extension>
