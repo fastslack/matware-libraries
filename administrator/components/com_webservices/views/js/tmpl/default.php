@@ -39,11 +39,11 @@ JFactory::getDocument()->addScriptDeclaration(file_get_contents('components/com_
 	<div class="span12">
 
 		URL:<br />
-		<input type="text" class="inputbox span6" id="url" name="url" value="http://wellmets.com/api/mets:patients"><br /><br />
+		<input type="text" class="inputbox span6" id="url" name="url" value=""><br /><br />
 		Username:<br />
-		<input type="text" class="inputbox span6" id="oauth_client_id" name="oauth_client_id" value="admin"><br /><br />
+		<input type="text" class="inputbox span6" id="oauth_client_id" name="oauth_client_id" value=""><br /><br />
 		Password:<br />
-		<input type="password" class="inputbox span6" id="oauth_client_secret" name="oauth_client_secret" value="ksjdfa23892xd"><br /><br />
+		<input type="password" class="inputbox span6" id="oauth_client_secret" name="oauth_client_secret" value=""><br /><br />
 
 		<button id="authorise" name="authorise">Authorise</button><button id="resource" name="resource">Get resource</button><br /><br />
 
