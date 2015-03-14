@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <extension version="3.0" type="plugin" group="system" method="upgrade">
-    <name>PLG_SYSTEM_MATWARE</name>
+    <name>plg_system_matware</name>
     <author>Matware</author>
     <creationDate>June 2013</creationDate>
-    <copyright>Copyright (C) 2004 - 2014 Matware. All rights reserved.</copyright>
+    <copyright>Copyright (C) 2004 - 2015 Matware. All rights reserved.</copyright>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
     <authorEmail>support@matware.com.ar</authorEmail>
     <authorUrl>www.matware.com.ar</authorUrl>

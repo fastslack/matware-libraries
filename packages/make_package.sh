@@ -4,7 +4,7 @@
 #
 # @version $Id:
 # @package Matware.Libraries
-# @copyright Copyright (C) 2004 - 2014 Matware. All rights reserved.
+# @copyright Copyright (C) 2004 - 2015 Matware. All rights reserved.
 # @author Matias Aguirre
 # @email maguirre@matware.com.ar
 # @link http://www.matware.com.ar/
@@ -27,6 +27,10 @@ rm -rf *.zip
 mkdir ${COM_WEBSERVICES}
 cp -r ../administrator/components/${COM_WEBSERVICES}/ ${COM_WEBSERVICES}/admin
 cp ${COM_WEBSERVICES}/admin/webservices.xml ${COM_WEBSERVICES}/.
+cp ${COM_WEBSERVICES}/admin/install.php ${COM_WEBSERVICES}/.
+cp -r ../api ${COM_WEBSERVICES}/admin/install/.
+cp -r ../components ${COM_WEBSERVICES}/admin/install/.
+cp -r ../etc ${COM_WEBSERVICES}/admin/install/.
 cp -r ../media/${COM_WEBSERVICES}/ ${COM_WEBSERVICES}/.
 zip -r ${COM_WEBSERVICES}.zip ${COM_WEBSERVICES}/
 

@@ -16,8 +16,8 @@
 	</files>
 
 	<languages folder="language">
-		<language tag="en-GB">en-GB.plg_authentication_oauth2.ini</language>
-		<language tag="en-GB">en-GB.plg_authentication_oauth2.sys.ini</language>
+		<language tag="en-GB">en-GB/en-GB.plg_authentication_oauth2.ini</language>
+		<language tag="en-GB">en-GB/en-GB.plg_authentication_oauth2.sys.ini</language>
 	</languages>
 
 	<config>

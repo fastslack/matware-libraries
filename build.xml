@@ -43,6 +43,13 @@
             </fileset>
         </copy>
 
+        <!-- Webservices API -->
+        <copy todir="${www.dir}/api" overwrite="true">
+            <fileset dir="${matware.src}/api">
+                <include name="**" />
+            </fileset>
+        </copy>
+
         <!-- Plugins - Languages -->
         <copy todir="${www.dir}/administrator/language" overwrite="true">
             <fileset dir="${matware.src}/plugins/system/matware/language">
