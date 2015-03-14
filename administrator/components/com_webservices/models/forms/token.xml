@@ -11,7 +11,7 @@
           size="200"
           label="COM_WEBSERVICES_CONFIG_URL"
           description="COM_WEBSERVICES_CONFIG_URL_DESC"
-          default="http://moncada.matware.com.ar/j3-rest-api/api/joomla:articles"
+          default=""
 					class="input-xxlarge"
           />
 
