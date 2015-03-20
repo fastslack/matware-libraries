@@ -57,12 +57,9 @@ class com_webservicesInstallerScript
 		JFolder::copy("{$adminpath}/api", JPATH_ROOT."/api");
 		JFolder::copy("{$adminpath}/etc", JPATH_ROOT."/etc");
 
-		// Copy component services
-		JFolder::copy("{$adminpath}/components/com_content/services", JPATH_BASE."/components/com_content/services");
-		JFolder::copy("{$adminpath}/components/com_weblinks/services", JPATH_BASE."/components/com_weblinks/services");
-
-		JFile::copy("{$adminpath}/components/com_content/services.json", JPATH_BASE."/components/com_content/services.json");
-		JFile::copy("{$adminpath}/components/com_weblinks/services.json", JPATH_BASE."/components/com_weblinks/services.json");
+		// Copy com_content component services
+		JFolder::copy("{$adminpath}/components/com_content/services", JPATH_ROOT."/components/com_content/services", '', true);
+		JFile::copy("{$adminpath}/components/com_content/services.json", JPATH_ROOT."/components/com_content/services.json");
 	}
  
 	/**
