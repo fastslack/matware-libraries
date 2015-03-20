@@ -52,12 +52,12 @@ cd ..
 zip -r pkg_${PROJECT}-${VERSION}.zip pkg_matware.xml packages/
 cd packages/
 
-# Cleanup
-#rm *.zip
-rm -rf ${COM_WEBSERVICES} matware/ oauth2/
-
 # Move final package
 mv ../pkg_${PROJECT}-${VERSION}.zip .
+
+# Cleanup
+rm -rf ${COM_WEBSERVICES} matware/ oauth2/
+rm ${COM_WEBSERVICES}.zip ${LIB_MATWARE}.zip ${PLG_NAME_OAUTH}.zip ${PLG_NAME}.zip
 
 # create symlink
 rm -rf pkg_${PROJECT}-latest.zip
