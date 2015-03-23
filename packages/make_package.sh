@@ -23,7 +23,7 @@ PLG_NAME_OAUTH="plg_auth_oauth2"
 
 rm -rf *.zip
 
-# Make component package
+# Make administrator component package
 mkdir ${COM_WEBSERVICES}
 cp -r ../administrator/components/${COM_WEBSERVICES}/ ${COM_WEBSERVICES}/admin
 cp ${COM_WEBSERVICES}/admin/webservices.xml ${COM_WEBSERVICES}/.
@@ -32,6 +32,11 @@ cp -r ../api ${COM_WEBSERVICES}/admin/install/.
 cp -r ../components ${COM_WEBSERVICES}/admin/install/.
 cp -r ../etc ${COM_WEBSERVICES}/admin/install/.
 cp -r ../media/${COM_WEBSERVICES}/ ${COM_WEBSERVICES}/.
+
+# Copy front-end component
+cp -r ../components/com_webservices ${COM_WEBSERVICES}/site
+
+# Zip package
 zip -r ${COM_WEBSERVICES}.zip ${COM_WEBSERVICES}/
 
 # Make library package
