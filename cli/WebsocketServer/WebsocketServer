@@ -13,8 +13,8 @@
 define( '_JEXEC', 1 );
 
 // Bootstrap the application.
-require dirname(__FILE__).'/configuration.php';
-require dirname(dirname(__FILE__)).'/bootstrap.php';
+require '../../configuration.php';
+require dirname(__FILE__).'/bootstrap.php';
 
 final class WebsocketServer extends ApiApplicationWeb implements MWebsocketController 
 {
