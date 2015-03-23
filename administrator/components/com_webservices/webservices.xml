@@ -25,6 +25,11 @@
 		</sql>
 	</uninstall>
 
+	<files folder="site">
+		<folder>services</folder>
+		<filename>services.json</filename>
+	</files>
+
 	<administration>
 		<menu>COM_WEBSERVICES</menu>
 		<submenu>
@@ -36,6 +41,9 @@
 			</menu>
 			<menu view="tokens" link="option=com_webservices&amp;view=tokens">
 				COM_WEBSERVICES_TOKENS
+			</menu>
+			<menu view="tokens" link="option=com_webservices&amp;view=websocket">
+				COM_WEBSERVICES_WEBSOCKET
 			</menu>
 		</submenu>
 		<files folder="admin">
