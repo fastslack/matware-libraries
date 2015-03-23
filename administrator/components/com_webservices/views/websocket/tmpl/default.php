@@ -1,26 +1,15 @@
 <?php
 /**
  * @version       $Id: 
- * @package       Matware.Component
+ * @package       Matware.Libraries
  * @subpackage    Webservices
- * @copyright     Copyright (C) 2004 - 2014 Matware - All rights reserved.
+ * @copyright     Copyright (C) 1996 - 2015 Matware - All rights reserved.
  * @author        Matias Aguirre
  * @email         maguirre@matware.com.ar
  * @link          http://www.matware.com.ar/
  * @license       GNU/GPL http://www.gnu.org/licenses/gpl-2.0-standalone.html
  */
 defined('_JEXEC') or die;
-
-$action = JRoute::_('index.php?option=com_webservices&view=websocket');
-
-// Get J! document
-$document	= JFactory::getDocument();
-$document->addStyleSheet("components/com_webservices/css/webservices.css");
-
-// HTML helpers
-//JHtml::_('behavior.framework', true);
-
-$my = JFactory::getUser();
 
 ?>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
@@ -68,7 +57,7 @@ $my = JFactory::getUser();
 		}
 
 		function onMessage(evt) {
-			console.log(evt.data);
+			//console.log(evt.data);
 
 			parse = JSON.parse(evt.data);
 
@@ -83,7 +72,7 @@ $my = JFactory::getUser();
 		}
 
 		function doSend(message) {
-		  console.log("SENT: " + message);
+		  //console.log("SENT: " + message);
 		  websocket.send(message);
 		}
 
