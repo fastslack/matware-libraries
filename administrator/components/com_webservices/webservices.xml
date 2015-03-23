@@ -52,7 +52,7 @@
 			<folder>install</folder>
 			<folder>js</folder>
 			<folder>controllers</folder>
-			<folder>hal-browser</folder>
+			<folder>hal_browser</folder>
 			<folder>helpers</folder>
 			<folder>layouts</folder>
 			<folder>language</folder>
