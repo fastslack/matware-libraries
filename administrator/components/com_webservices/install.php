@@ -56,7 +56,7 @@ class com_webservicesInstallerScript
 		JFolder::copy("{$adminpath}/etc", JPATH_ROOT."/etc");
 
 		// Copy the CLI scripts
-		JFolder::copy("{$adminpath}/cli/WebsocketServer", JPATH_ROOT."/cli/WebsocketServer");
+		JFolder::copy("{$adminpath}/cli/WebsocketServer", JPATH_ROOT."/cli/WebsocketServer", '', true);
 
 		// Copy com_content component services
 		JFolder::copy("{$adminpath}/components/com_content/services", JPATH_ROOT."/components/com_content/services", '', true);
