@@ -16,8 +16,9 @@
 		<filename>bootstrap.php</filename>
 		<filename>matware.xml</filename>
 		<folder>application</folder>
-		<folder>form</folder>
 		<folder>client</folder>
+		<folder>form</folder>
+		<folder>jupgrade</folder>
 		<folder>oauth2</folder>
 		<folder>socket</folder>
 	</files>

@@ -83,7 +83,7 @@ class JUpgradeproDriverRest extends JUpgradeproDriver
 		$data['keepid'] = $this->params->keep_ids ? $this->params->keep_ids : 0;
 
 		$request = $http->get($this->params->rest_hostname.'/index.php', $data);
-print_r($request);
+
 		$code = $request->code;
 
 		if ($code == 500) {
