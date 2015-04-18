@@ -32,7 +32,7 @@ final class WebsocketServer extends ApiApplicationWeb implements MWebsocketContr
 	* @var int
 	* @since 1.0
 	*/
-	public $port = 8888;
+	public $port = 8080;
 
 	/**
 	* A database object for the application to use.
@@ -71,7 +71,7 @@ final class WebsocketServer extends ApiApplicationWeb implements MWebsocketContr
 			// Pass an array of configuration options
 			array(
 				// Set the name of the log file
-				'text_file' => JPATH_SITE.'/logs/WebSocketServer.log.php'
+				'text_file' => 'WebSocketServer.log.php'
 			)
 		);
 
