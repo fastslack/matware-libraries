@@ -3,7 +3,7 @@
  * @version       $Id: 
  * @package       Matware.Libraries
  * @subpackage    OAuth2
- * @copyright     Copyright (C) 2004 - 2014 Matware - All rights reserved.
+ * @copyright     Copyright (C) 2004 - 2015 Matware - All rights reserved.
  * @author        Matias Aguirre
  * @email         maguirre@matware.com.ar
  * @link          http://www.matware.com.ar/
@@ -69,7 +69,7 @@ class MClientOauth2
 	/**
 	 * Fetch the access token making the OAuth 2.0 method process
 	 *
-	 * @return	string	Returns the JSON response from the server
+	 * @return	object	Returns the token object
 	 *
 	 * @since 	1.0
 	 * @throws	Exception
