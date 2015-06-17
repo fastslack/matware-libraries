@@ -57,7 +57,7 @@ class MOauth2ControllerInitialise extends MOauth2ControllerBase
 		// Generate temporary credentials for the client.
 		$credentials = new MOauth2Credentials($this->request);
 
-		// Getting the client object
+		// Get the client object
 		$client = $this->fetchClient($this->request->client_id);
 
 		// Doing authentication using Joomla! users

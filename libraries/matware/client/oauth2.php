@@ -76,14 +76,26 @@ class MClientOauth2
 	 */
 	public function fetchAccessToken()
 	{
-		// Temporary token
-		$temporary = (object) $this->getTemporary();
+		// Execute the temporary token
+		try {
+			$temporary = (object) $this->getTemporary();
+		} catch (RuntimeException $e) {
+			throw new RuntimeException($e->getMessage());
+		}
 
 		// Get authorization token
-		$authenticate = (object) $this->getAuthentication($temporary->oauth_code);
+		try {
+			$authenticate = (object) $this->getAuthentication($temporary->oauth_code);
+		} catch (RuntimeException $e) {
+			throw new RuntimeException($e->getMessage());
+		}
 
 		// Get access token
-		$token = (object) $this->getToken($authenticate->oauth_code);
+		try {
+			$token = (object) $this->getToken($authenticate->oauth_code);
+		} catch (RuntimeException $e) {
+			throw new RuntimeException($e->getMessage());
+		}
 
 		return $token;
 	}
@@ -307,19 +319,29 @@ class MClientOauth2
 	 * @since 	1.0
 	 * @throws	Exception
 	 */
-	public function getResource($options = array())
+	public function getResource($options = array(), $resource = null)
 	{
 		// Get the headers
 		$data = $this->getPostData();
 
+		// Set the correct client_id for oauth2
 		$options['oauth_client_id'] = !empty($options['oauth_client_id']) ? $options['oauth_client_id'] : $data['oauth_client_id'];
+
+		// Set the http method
+		$method = !empty($options['method']) ? strtolower($options['method']) : "get";
+		unset($options['method']);
 
 		// Add GET parameters to URL
 		$url_query = http_build_query($options);
 		$url = $this->options->get('url') . "?{$url_query}";
 
 		// Send the request
-		$response = $this->http->get($url, $this->getRestHeaders());
+		if ($method == "get")
+		{
+			$response = $this->http->get($url, $this->getRestHeaders());
+		} else if ($method == "post") {
+			$response = $this->http->post($url, $resource, $this->getRestHeaders());
+		}
 
 		// Check the response
 		if ($response->code >= 200 && $response->code < 400)
