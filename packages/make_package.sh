@@ -29,6 +29,7 @@ cp -r ../administrator/components/${COM_WEBSERVICES}/ ${COM_WEBSERVICES}/admin
 cp ${COM_WEBSERVICES}/admin/webservices.xml ${COM_WEBSERVICES}/.
 cp ${COM_WEBSERVICES}/admin/install.php ${COM_WEBSERVICES}/.
 cp -r ../api ${COM_WEBSERVICES}/admin/install/.
+cp -r ../cli ${COM_WEBSERVICES}/admin/install/.
 cp -r ../components ${COM_WEBSERVICES}/admin/install/.
 cp -r ../etc ${COM_WEBSERVICES}/admin/install/.
 cp -r ../media/${COM_WEBSERVICES}/ ${COM_WEBSERVICES}/.
@@ -51,6 +52,9 @@ zip -r ${PLG_NAME_OAUTH}.zip oauth2/
 # Make oauth2 plugin package
 cp -r ../plugins/system/matware/ .
 zip -r ${PLG_NAME}.zip matware/
+
+# Cleanup the directories
+rm -rf ${COM_WEBSERVICES} matware/ oauth2/
 
 # Create final package
 cd ..
