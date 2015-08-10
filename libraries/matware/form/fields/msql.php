@@ -1,6 +1,6 @@
 <?php
 /**
- * @version       $Id: 
+ * @version       $Id:
  * @package       Matware.Libraries
  * @subpackage    MFormFieldSQL
  * @copyright     Copyright (C) 2004 - 2014 Matware - All rights reserved.
@@ -232,9 +232,12 @@ class JFormFieldMSQL extends JFormFieldList
 		{
 			$html_filters = JFactory::getApplication()->getUserStateFromRequest($this->context . '.filter', 'filter', array(), 'array');
 
-			$filters = explode(",", $filter);
+			if (!is_array($filter))
+			{
+				$filter = explode(",", $filter);
+			}
 
-			foreach($filters as $k => $value)
+			foreach($filter as $k => $value)
 			{
 				if (isset($html_filters[$value]))
 				{
