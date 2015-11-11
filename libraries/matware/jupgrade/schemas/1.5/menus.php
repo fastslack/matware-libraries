@@ -194,7 +194,7 @@ class JUpgradeproMenu extends JUpgradeproMenus
 			}
 
 			// Save the new id
-			$menuMap->new = $this->_db->insertid();
+			$menuMap->new = $table->id;
 
 			// Save old and new id
 			try	{
