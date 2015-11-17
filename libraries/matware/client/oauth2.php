@@ -1,6 +1,6 @@
 <?php
 /**
- * @version       $Id: 
+ * @version       $Id:
  * @package       Matware.Libraries
  * @subpackage    OAuth2
  * @copyright     Copyright (C) 2004 - 2015 Matware - All rights reserved.

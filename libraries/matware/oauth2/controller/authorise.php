@@ -74,7 +74,7 @@ class MOauth2ControllerAuthorise extends MOauth2ControllerBase
 		$this->app->loadIdentity($client->_identity);
 
 		// Verify that we have a signed in user.
-		if ($credentials->getTemporaryToken() !== $this->request->code)
+		if (isset($this->request->code) && $credentials->getTemporaryToken() !== $this->request->code)
 		{
 			$this->respondError(400, 'invalid_grant', 'Temporary token is not valid');
 		}

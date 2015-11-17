@@ -1,6 +1,6 @@
 <?php
 /**
- * @version       $Id: 
+ * @version       $Id:
  * @package       Matware.Libraries
  * @subpackage    OAuth2
  * @copyright     Copyright (C) 2004 - 2014 Matware - All rights reserved.
@@ -32,13 +32,13 @@ class MOauth2ProtocolRequest
 	public $_headers = array();
 
 	/**
-	 * @var    string  
+	 * @var    string
 	 * @since  1.0
 	 */
 	public $_identity;
 
 	/**
-	 * @var    string  
+	 * @var    string
 	 * @since  1.0
 	 */
 	public $_credentials;
@@ -87,7 +87,7 @@ class MOauth2ProtocolRequest
 	}
 
 	/**
-	 * Method to get the OAUTH parameters. 
+	 * Method to get the OAUTH parameters.
 	 *
 	 * @return  array  $parameters  The OAUTH message parameters.
 	 *
