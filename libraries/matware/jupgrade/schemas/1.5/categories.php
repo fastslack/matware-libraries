@@ -154,7 +154,7 @@ class JUpgradeproCategories extends JUpgradeproCategory
 			}
 
 			// Reset some fields
-			$category['asset_id'] = $category['lft'] = $category['rgt'] =  null;
+			$category['asset_id'] = $category['lft'] = $category['rgt'] = null;
 			// Check if path is correct
 			$category['path'] = empty($category['path']) ? $category['alias'] : $category['path'];
 			// Fix the access
@@ -186,16 +186,6 @@ class JUpgradeproCategories extends JUpgradeproCategory
 
 			// Updating the steps table
 			$this->_step->_nextID($total);
-		}
-
-		// rebuild table
-
-		$category = JTable::getInstance('Category', 'JTable', array('dbo' => $this->_db));
-
-		try {
-			$category->rebuild();
-		} catch (RuntimeException $e) {
-			throw new RuntimeException($e->getMessage());
 		}
 
 		return false;
