@@ -1,15 +1,15 @@
 <?php
 /**
-* jUpgradePro
-*
-* @version $Id:
-* @package jUpgradePro
-* @copyright Copyright (C) 2004 - 2014 Matware. All rights reserved.
-* @author Matias Aguirre
-* @email maguirre@matware.com.ar
-* @link http://www.matware.com.ar/
-* @license GNU General Public License version 2 or later; see LICENSE
-*/
+ * jUpgradePro
+ *
+ * @version $Id:
+ * @package jUpgradePro
+ * @copyright Copyright (C) 2004 - 2014 Matware. All rights reserved.
+ * @author Matias Aguirre
+ * @email maguirre@matware.com.ar
+ * @link http://www.matware.com.ar/
+ * @license GNU General Public License version 2 or later; see LICENSE
+ */
 
 JLoader::register('JUpgradeproMenus', JPATH_LIBRARIES."/matware/jupgrade/menus.php");
 
@@ -33,20 +33,20 @@ class JUpgradeproMenu extends JUpgradeproMenus
 	public static function getConditionsHook()
 	{
 		$conditions = array();
-		
+
 		$conditions['as'] = "m";
-		
+
 		$conditions['select'] = 'm.*, c.option, p.alias AS palias';
-		
+
 		$join = array();
 		$join[] = "#__components AS c ON c.id = m.componentid";
 		$join[] = "#__menu AS p ON p.id = m.parent";
-		
+
 		$conditions['where'] = array();
 		$conditions['join'] = $join;
 
 		$conditions['order'] = "m.id ASC";
-		
+
 		return $conditions;
 	}
 
@@ -93,15 +93,20 @@ class JUpgradeproMenu extends JUpgradeproMenus
 		$query->select('extension_id, element');
 		$query->from('#__extensions');
 		$this->_db->setQuery($query);
-		$extensions_ids = $this->_db->loadObjectList('element');	
+		$extensions_ids = $this->_db->loadObjectList('element');
 
 		// Initialize values
 		$unique_alias_suffix = 1;
 
 		$total = count($rows);
 
+		$oldnewmap = array();
+
+		// Getting the table and query
+		$table = JTable::getInstance('Menu', 'JTable');
+
 		// Start the update
-		foreach ($rows as $row)
+		foreach ($rows as &$row)
 		{
 			// Convert the array into an object.
 			$row = (object) $row;
@@ -130,10 +135,10 @@ class JUpgradeproMenu extends JUpgradeproMenus
 			$row = $this->migrateLink($row);
 
 			// Get new/old id's values
-			$menuMap = new stdClass();
+			$rowMap = new stdClass();
 
 			// Save the old id
-			$menuMap->old = $row->id;
+			$rowMap->old = $row->id;
 
 			// Fixing id if == 1 (used by root)
 			if ($row->id == 1) {
@@ -144,13 +149,13 @@ class JUpgradeproMenu extends JUpgradeproMenus
 				$query->limit(1);
 				$this->_db->setQuery($query);
 				$row->id = $this->_db->loadResult();
-			}	
+			}
 
 			// Fixing extension_id
 			if (isset($row->option)) {
 				$row->component_id = isset($extensions_ids[$row->option]) ? $extensions_ids[$row->option]->extension_id : 0;
 			}
-			
+
 			// Fixing name
 			$row->title = $row->name;
 
@@ -163,22 +168,6 @@ class JUpgradeproMenu extends JUpgradeproMenus
 			unset($row->option);
 			unset($row->componentid);
 
-			// Getting the table and query
-			$table = JTable::getInstance('Menu', 'JTable');
-			// Setting the location of the new category
-			if ($row->palias !== false) {
-
-				$query->clear();
-				$query->select('id');
-				$query->from('#__menu');
-				$query->where('alias = '.$this->_db->q($row->palias));
-				$query->order('id DESC');
-				$query->limit(1);
-				$this->_db->setQuery($query);
-				$row->parent = $this->_db->loadResult();				
-
-				$table->setLocation($row->parent, 'last-child');
-			}
 			// Bind the data
 			try {
 				$table->bind((array) $row);
@@ -193,18 +182,69 @@ class JUpgradeproMenu extends JUpgradeproMenus
 				throw new RuntimeException($e->getMessage());
 			}
 
-			// Save the new id
-			$menuMap->new = $this->_db->insertid();
+			// Save the new id in rowmap and row
+			$rowMap->new 	= $table->id;
+			$row->id 		= $table->id;
+
+			$oldnewmap[$rowMap->old] = $rowMap;
 
 			// Save old and new id
 			try	{
-				$this->_db->insertObject('#__jupgradepro_menus', $menuMap);
+				$this->_db->insertObject('#__jupgradepro_menus', $rowMap);
 			}	catch (Exception $e) {
 				throw new Exception($e->getMessage());
 			}
 
+			$table->reset();
+			$table->id = 0;
+		}
+
+		// now rebuild tree by fixing parents and location
+
+		foreach ($rows AS $row)
+		{
+			$table->reset();
+			$table->id = 0;
+
+			$row->lft = $row->rgt = null;
+
+			$row->parent = isset($oldnewmap[$row->parent]) ? $oldnewmap[$row->parent]->new : 1;
+
+			// Bind the data
+			try {
+				$table->bind((array) $row);
+			} catch (RuntimeException $e) {
+				throw new RuntimeException($e->getMessage());
+			}
+
+			$table->setLocation($row->parent, 'last-child');
+
+			try {
+				$table->check();
+			} catch (RuntimeException $e) {
+				throw new RuntimeException($e->getMessage());
+			}
+
+			// Store to database
+			try {
+				$table->store();
+			} catch (RuntimeException $e) {
+				throw new RuntimeException($e->getMessage());
+			}
+
+			$table->rebuildPath($table->id);
+
+
 			// Updating the steps table
 			$this->_step->_nextID($total);
+
+		}
+
+		// rebuild table
+		try {
+			$table->rebuild();
+		} catch (RuntimeException $e) {
+			throw new RuntimeException($e->getMessage());
 		}
 
 		return false;
