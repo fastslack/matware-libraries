@@ -175,7 +175,7 @@ class JUpgradeproCategory extends JUpgradepro
 		}
 
 		// Check if has duplicated aliases
-		$alias = $this->getAlias('#__categories', $row['alias']);
+		$alias = $this->getAlias('#__categories', $row['alias'], $row['extension']);
 
 		// Prevent MySQL duplicate error
 		// @@ Duplicate entry for key 'idx_client_id_parent_id_alias_language'
