@@ -232,6 +232,11 @@ class JFormFieldMSQL extends JFormFieldList
 		{
 			$html_filters = JFactory::getApplication()->getUserStateFromRequest($this->context . '.filter', 'filter', array(), 'array');
 
+			if (empty($html_filters))
+			{
+				$html_filters = (array) JFactory::getApplication()->getUserState('filter');
+			}
+
 			if (!is_array($filter))
 			{
 				$filter = explode(",", $filter);
