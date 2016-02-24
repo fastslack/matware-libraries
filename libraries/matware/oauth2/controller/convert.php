@@ -88,7 +88,7 @@ class MOauth2ControllerConvert extends MOauth2ControllerBase
 		// Build the response for the client.
 		$response = array(
 			'access_token' => $credentials->getAccessToken(),
-			'expires_in' => 'P60M',
+			'expires_in' => 'PT1H',
 			'refresh_token' => $credentials->getRefreshToken()
 		);
 
