@@ -1,9 +1,9 @@
 <?php
 /**
- * @version       $Id: 
+ * @version       $Id:
  * @package       Matware.Libraries
  * @subpackage    OAuth2
- * @copyright     Copyright (C) 2004 - 2014 Matware - All rights reserved.
+ * @copyright     Copyright (C) 2004 - 2016 Matware - All rights reserved.
  * @author        Matias Aguirre
  * @email         maguirre@matware.com.ar
  * @link          http://www.matware.com.ar/
@@ -26,13 +26,13 @@ class MOauth2Client
 	 * @var    MOauth2TableClient  JTable object for persisting the client object.
 	 * @since  1.0
 	 */
-	protected $_table;
+	protected $table;
 
 	/**
 	 * @var    JUser  JUser object for persisting the Joomla! user.
 	 * @since  1.0
 	 */
-	public $_identity;
+	public $identity;
 
 	/**
 	 * Object constructor.
@@ -48,14 +48,14 @@ class MOauth2Client
 		JTable::addIncludePath(JPATH_LIBRARIES . '/oauth2/table');
 
 		// Setup the table object.
-		$this->_table = $table ? $table : JTable::getInstance('Users', 'MOauth2Table');
+		$this->table = $table ? $table : JTable::getInstance('Users', 'MOauth2Table');
 
 		// Iterate over any input properties and bind them to the object.
 		if ($properties)
 		{
 			foreach ($properties as $k => $v)
 			{
-				$this->_table->$k = $v;
+				$this->table->$k = $v;
 			}
 		}
 	}
@@ -71,9 +71,9 @@ class MOauth2Client
 	 */
 	public function __get($p)
 	{
-		if (isset($this->_table->$p))
+		if (isset($this->table->$p))
 		{
-			return $this->_table->$p;
+			return $this->table->$p;
 		}
 	}
 
@@ -89,9 +89,9 @@ class MOauth2Client
 	 */
 	public function __set($p, $v)
 	{
-		if (isset($this->_table->$p))
+		if (isset($this->table->$p))
 		{
-			$this->_table->$p = $v;
+			$this->table->$p = $v;
 		}
 	}
 
@@ -105,15 +105,15 @@ class MOauth2Client
 	public function create()
 	{
 		// Can't insert something that already has an ID.
-		if ($this->_table->client_id)
+		if ($this->table->client_id)
 		{
 			return false;
 		}
 
 		// Ensure we don't have an id to insert... use the auto-incrementor instead.
-		$this->_table->client_id = null;
+		$this->table->client_id = null;
 
-		return $this->_table->store();
+		return $this->table->store();
 	}
 
 	/**
@@ -125,7 +125,7 @@ class MOauth2Client
 	 */
 	public function delete()
 	{
-		$this->_table->delete();
+		$this->table->delete();
 	}
 
 	/**
@@ -139,7 +139,7 @@ class MOauth2Client
 	 */
 	public function load($clientId)
 	{
-		$this->_table->load($clientId);
+		$this->table->load($clientId);
 	}
 
 	/**
@@ -153,9 +153,9 @@ class MOauth2Client
 	 */
 	public function loadByKey($key)
 	{
-		if ($this->_table->loadByKey($key))
+		if ($this->table->loadByKey($key))
 		{
-			$this->_identity = new JUser($this->_table->id);
+			$this->identity = new JUser($this->table->id);
 		}
 	}
 
@@ -168,11 +168,11 @@ class MOauth2Client
 	 */
 	public function update()
 	{
-		if (!$this->_table->client_id)
+		if (!$this->table->client_id)
 		{
 			return false;
 		}
 
-		return $this->_table->store();
+		return $this->table->store();
 	}
 }
