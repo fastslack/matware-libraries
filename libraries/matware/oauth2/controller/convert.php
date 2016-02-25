@@ -71,15 +71,9 @@ class MOauth2ControllerConvert extends MOauth2ControllerBase
 		$this->app->loadIdentity($client->identity);
 
 		// Ensure the credentials are authorised.
-		if ($credentials->getType() === MOauth2Credentials::TOKEN)
+		if ($credentials->getType() !== MOauth2Credentials::TOKEN && $credentials->getType() !== MOauth2Credentials::AUTHORISED)
 		{
 			$this->respondError(400, 'invalid_request', 'The token is not for a temporary credentials set.');
-		}
-
-		// Ensure the credentials are authorised.
-		if ($credentials->getType() !== MOauth2Credentials::AUTHORISED)
-		{
-			$this->respondError(400, 'invalid_request', 'The token has not been authorised by the resource owner.');
 		}
 
 		// Convert the credentials to valid Token credentials for requesting protected resources.

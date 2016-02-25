@@ -96,6 +96,7 @@ class MClientOauth2
 				'oauth_response_type' => 'authorise',
 				'oauth_code' => $code->oauth_code
 			);
+
 			$code = (object) $this->getPostRequest($append);
 		} catch (RuntimeException $e) {
 			throw new RuntimeException($e->getMessage());
@@ -208,31 +209,17 @@ class MClientOauth2
 	 */
 	public function refreshToken($token = null)
 	{
-		if (!$this->getOption('user_refresh'))
-		{
-			throw new RuntimeException('Refresh token is not supported for this OAuth instance.');
+		// Get access token
+		try {
+			// Create the request array to be sent
+			$append = array(
+				'oauth_response_type' => 'refresh_token',
+				'oauth_refresh_token' => $token
+			);
+			$token = (object) $this->getPostRequest($append);
+		} catch (RuntimeException $e) {
+			throw new RuntimeException($e->getMessage());
 		}
-
-		if (!$token)
-		{
-			$token = $this->getToken();
-
-			if (!array_key_exists('refresh_token', $token))
-			{
-				throw new RuntimeException('No refresh token is available.');
-			}
-
-			$token = $token['refresh_token'];
-		}
-
-		$data['grant_type'] = 'refresh_token';
-		$data['refresh_token'] = $token;
-		$data['client_id'] = $this->getOption('client_id');
-		$data['client_secret'] = $this->getOption('client_secret');
-		$response = $this->http->post($this->getOption('token_url'), $data);
-
-		// Process the response
-		$token = $this->processRequest($response);
 
 		return $token;
 	}

@@ -92,9 +92,10 @@ class MOauth2CredentialsStateNew extends MOauth2CredentialsState
 		$this->table->type = MOauth2Credentials::TEMPORARY;
 
 		// Set the correct date adding the lifetime
-		$date = JFactory::getDate();
+		// @@ TODO: Fix static timezone
+		$date = JFactory::getDate('now', 'America/Buenos_Aires');
 		$date->add(new DateInterval($lifetime));
-		$this->table->temporary_expiration_date = $date->toSql();
+		$this->table->expiration_date = $date->toSql(true);
 
 		// Persist the object in the database.
 		$this->create();

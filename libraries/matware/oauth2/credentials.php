@@ -292,22 +292,32 @@ class MOauth2Credentials
 	 */
 	public function load()
 	{
-		// Clean all expired tokens
-		$this->table->clean();
-
 		// Initialise credentials_id
 		$this->table->credentials_id = 0;
 
 		// Load the credential
-		if ( isset($this->request->response_type) && !isset($this->request->access_token) )
+		if ( isset($this->request->response_type) && !isset($this->request->access_token) && !isset($this->request->refresh_token) )
 		{
 			// Get the correct client secret key
 			$key = $this->signer->secretDecode($this->request->client_secret);
 
+			// Load the credential using secret key
 			$load = $this->table->loadBySecretKey($key, $this->request->_fetchRequestUrl());
+		}
+		elseif (isset($this->request->refresh_token))
+		{
+			// Clean all expired tokens
+			$this->table->clean();
+
+			// Load the credential using access token
+			$load = $this->table->loadByRefreshToken($this->request->refresh_token, $this->request->_fetchRequestUrl());
 		}
 		elseif (isset($this->request->access_token))
 		{
+			// Clean all expired tokens
+			$this->table->clean();
+
+			// Load the credential using access token
 			$load = $this->table->loadByAccessToken($this->request->access_token, $this->request->_fetchRequestUrl());
 		}
 

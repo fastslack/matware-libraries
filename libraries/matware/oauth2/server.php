@@ -109,11 +109,13 @@ class MOauth2Server
 					$controller = new MOauth2ControllerInitialise($this->request);
 
 					break;
+
 				case 'authorise':
 
 					$controller = new MOauth2ControllerAuthorise($this->request);
 
 					break;
+				case 'refresh_token':
 				case 'token':
 
 					$controller = new MOauth2ControllerConvert($this->request);

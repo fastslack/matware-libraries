@@ -58,9 +58,10 @@ class MOauth2CredentialsStateAuthorised extends MOauth2CredentialsState
 		$this->table->type = MOauth2Credentials::TOKEN;
 
 		// Set the correct date adding the lifetime
-		$date = JFactory::getDate();
+		// @@ TODO: Fix static timezone
+		$date = JFactory::getDate('now', 'America/Buenos_Aires');
 		$date->add(new DateInterval($lifetime));
-		$this->table->expiration_date = $date->toSql();
+		$this->table->expiration_date = $date->toSql(true);
 
 		// Clean the temporary expitation date
 		$this->table->temporary_expiration_date = 0;
