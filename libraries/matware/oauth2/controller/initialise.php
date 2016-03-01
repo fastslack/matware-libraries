@@ -72,7 +72,7 @@ class MOauth2ControllerInitialise extends MOauth2ControllerBase
 		// Initialize the credentials for this request
 		$credentials->initialise(
 			$client->identity->id,
-			$this->app->get('oauth.tokenlifetime', 'PT1H')
+			$this->app->get('oauth.tokenlifetime', 'PT4H')
 		);
 
 		// Build the response for the client.

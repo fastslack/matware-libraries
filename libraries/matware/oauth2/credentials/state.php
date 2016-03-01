@@ -132,7 +132,7 @@ abstract class MOauth2CredentialsState
 	 * @since   1.0
 	 * @throws  LogicException
 	 */
-	abstract public function initialise($clientId, $clientSecret, $callbackUrl, $lifetime = 'PT1H');
+	abstract public function initialise($clientId, $clientSecret, $callbackUrl, $lifetime = 'PT4H');
 
 	/**
 	 * Method to revoke a set of token credentials.

@@ -34,7 +34,7 @@ class MOauth2CredentialsStateTemporary extends MOauth2CredentialsState
 	 * @since   1.0
 	 * @throws  LogicException
 	 */
-	public function authorise($resourceOwnerId, $lifetime = 'PT1H')
+	public function authorise($resourceOwnerId, $lifetime = 'PT4H')
 	{
 		// Setup the properties for the credentials.
 		$this->table->resource_owner_id = (int) $resourceOwnerId;

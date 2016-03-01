@@ -79,7 +79,7 @@ class MOauth2CredentialsStateNew extends MOauth2CredentialsState
 	 * @since   1.0
 	 * @throws  LogicException
 	 */
-	public function initialise($clientId, $clientSecret, $callbackUrl, $lifetime = 'PT1H')
+	public function initialise($clientId, $clientSecret, $callbackUrl, $lifetime = 'PT4H')
 	{
 		// Setup the properties for the credentials.
 		$this->table->credentials_id = null;

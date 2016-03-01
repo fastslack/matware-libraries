@@ -261,7 +261,7 @@ class MOauth2Credentials
 	 * @since   1.0
 	 * @throws  LogicException
 	 */
-	public function initialise($clientId, $lifetime = 'PT1H')
+	public function initialise($clientId, $lifetime = 'PT4H')
 	{
 		$clientSecret = $this->signer->secretDecode($this->request->client_secret);
 

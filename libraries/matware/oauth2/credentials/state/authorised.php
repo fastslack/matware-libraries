@@ -49,7 +49,7 @@ class MOauth2CredentialsStateAuthorised extends MOauth2CredentialsState
 	 * @since   1.0
 	 * @throws  LogicException
 	 */
-	public function convert($lifetime = 'PT1H')
+	public function convert($lifetime = 'PT4H')
 	{
 		// Setup the properties for the credentials.
 		$this->table->callback_url = '';
