@@ -79,7 +79,7 @@ class PlgSystemMatware extends JPlugin
 				}
 			}
 			// Remove jQuery in administration, or if it's frontend site and it has been asked via plugin parameters
-			if (true)
+			if (!$isAdmin)
 			{
 				unset($doc->_scripts[JURI::root(true) . '/media/jui/js/jquery.min.js']);
 				unset($doc->_scripts[JURI::root(true) . '/media/jui/js/jquery.js']);
@@ -114,7 +114,7 @@ class PlgSystemMatware extends JPlugin
 				}
 			}
 			// Remove jQuery Migrate in administration, or if it's frontend site and it has been asked via plugin parameters
-			if (true)
+			if (!$isAdmin)
 			{
 				unset($doc->_scripts[JURI::root(true) . '/media/jui/js/jquery-migrate.min.js']);
 				unset($doc->_scripts[JURI::root(true) . '/media/jui/js/jquery-migrate.js']);
@@ -123,7 +123,7 @@ class PlgSystemMatware extends JPlugin
 				unset($doc->_scripts[JURI::root(true) . '/templates/' . $template . '/js/jui/jquery-migrate.js']);
 			}
 			// Remove Bootstrap in administration, or if it's frontend site and it has been asked via plugin parameters
-			if (true)
+			if (!$isAdmin)
 			{
 				unset($doc->_scripts[JURI::root(true) . '/media/jui/js/bootstrap.js']);
 				unset($doc->_scripts[JURI::root(true) . '/media/jui/js/bootstrap.min.js']);
