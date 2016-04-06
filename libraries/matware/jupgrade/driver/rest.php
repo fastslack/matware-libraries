@@ -19,7 +19,7 @@ defined('_JEXEC') or die;
  * @package		jUpgradePro
  */
 class JUpgradeproDriverRest extends JUpgradeproDriver
-{	
+{
 
 	function __construct(JUpgradeproStep $step = null)
 	{
@@ -36,7 +36,7 @@ class JUpgradeproDriverRest extends JUpgradeproDriver
 	public function &getRestData()
 	{
 		$data = array();
-	
+
 		// Setting the headers for REST
 		$rest_username = $this->params->rest_username;
 		$rest_password = $this->params->rest_password;
@@ -127,10 +127,10 @@ class JUpgradeproDriverRest extends JUpgradeproDriver
 
  /**
 	* Check if the table exists
- 	* 
+	*
 	* @param string $table The table name
 	*/
-	public function tableExists ($table) { 
+	public function tableExists ($table) {
 		return $this->requestRest("tableexists", $table);
 	}
 }
