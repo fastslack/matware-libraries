@@ -1,15 +1,14 @@
 <?php
 /**
- * @version       $Id: 
+ * @version       $Id:
  * @package       Matware.Libraries
  * @subpackage    OAuth2
- * @copyright     Copyright (C) 2004 - 2014 Matware - All rights reserved.
+ * @copyright     Copyright (C) 2004 - 2016 Matware - All rights reserved.
  * @author        Matias Aguirre
  * @email         maguirre@matware.com.ar
  * @link          http://www.matware.com.ar/
  * @license       GNU/GPL http://www.gnu.org/licenses/gpl-2.0-standalone.html
  */
-// No direct access
 defined('_JEXEC') or die( 'Restricted access' );
 
 // Register component prefix
@@ -110,11 +109,13 @@ class MOauth2Server
 					$controller = new MOauth2ControllerInitialise($this->request);
 
 					break;
+
 				case 'authorise':
 
 					$controller = new MOauth2ControllerAuthorise($this->request);
 
 					break;
+				case 'refresh_token':
 				case 'token':
 
 					$controller = new MOauth2ControllerConvert($this->request);

@@ -12,7 +12,7 @@
 
     <!-- packages to install -->
 		<files folder="packages">
-			<file type="component" id="webservices" >com_webservices.zip</file>
+			<file type="component" id="com_webservices" >com_webservices.zip</file>
 			<file type="library" id="matware">lib_matware.zip</file>
 			<file type="plugin" id="matware" group="system">plg_sys_matware.zip</file>
 			<file type="plugin" id="oauth2" group="authentication">plg_auth_oauth2.zip</file>

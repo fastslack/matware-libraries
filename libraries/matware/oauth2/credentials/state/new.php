@@ -1,15 +1,15 @@
 <?php
 /**
- * @version       $Id: 
+ * @version       $Id:
  * @package       Matware.Libraries
  * @subpackage    OAuth2
- * @copyright     Copyright (C) 2004 - 2014 Matware - All rights reserved.
+ * @copyright     Copyright (C) 2004 - 2016 Matware - All rights reserved.
  * @author        Matias Aguirre
  * @email         maguirre@matware.com.ar
  * @link          http://www.matware.com.ar/
  * @license       GNU/GPL http://www.gnu.org/licenses/gpl-2.0-standalone.html
  */
-defined('JPATH_PLATFORM') or die;
+defined('_JEXEC') or die( 'Restricted access' );
 
 /**
  * OAuth New Credentials class for the Matware.Libraries
@@ -79,7 +79,7 @@ class MOauth2CredentialsStateNew extends MOauth2CredentialsState
 	 * @since   1.0
 	 * @throws  LogicException
 	 */
-	public function initialise($clientId, $clientSecret, $callbackUrl, $lifetime = 'PT1H')
+	public function initialise($clientId, $clientSecret, $callbackUrl, $lifetime = 'PT4H')
 	{
 		// Setup the properties for the credentials.
 		$this->table->credentials_id = null;
@@ -92,9 +92,10 @@ class MOauth2CredentialsStateNew extends MOauth2CredentialsState
 		$this->table->type = MOauth2Credentials::TEMPORARY;
 
 		// Set the correct date adding the lifetime
-		$date = JFactory::getDate();
+		// @@ TODO: Fix static timezone
+		$date = JFactory::getDate('now', 'America/Buenos_Aires');
 		$date->add(new DateInterval($lifetime));
-		$this->table->temporary_expiration_date = $date->toSql();
+		$this->table->expiration_date = $date->toSql(true);
 
 		// Persist the object in the database.
 		$this->create();

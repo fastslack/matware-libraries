@@ -5,7 +5,7 @@
 * @version $Id$
 * @package Matware
 * @subpackage CLI Bootstrap
-* @copyright Copyright 2004 - 2014 Matias Aguirre. All rights reserved.
+* @copyright Copyright 2004 - 2015 Matias Aguirre. All rights reserved.
 * @license GNU General Public License version 2 or later.
 * @author Matias Aguirre <maguirre@matware.com.ar>
 * @link http://www.matware.com.ar
@@ -15,7 +15,7 @@ error_reporting(-1);
 ini_set('display_errors', 1);
 
 // Look for the Joomla! root path.
-$ROOT = dirname(dirname(dirname(dirname(__FILE__)))).'/www/example';
+$ROOT = dirname(dirname(dirname(__FILE__)));
 
 // Define the application home directory.
 $JAPIHOME = getenv('JAPI_HOME') ? getenv('JAPI_HOME') : $ROOT;

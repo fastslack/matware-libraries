@@ -1,15 +1,15 @@
 <?php
 /**
- * @version       $Id: 
+ * @version       $Id:
  * @package       Matware.Libraries
  * @subpackage    OAuth2
- * @copyright     Copyright (C) 2004 - 2014 Matware - All rights reserved.
+ * @copyright     Copyright (C) 2004 - 2016 Matware - All rights reserved.
  * @author        Matias Aguirre
  * @email         maguirre@matware.com.ar
  * @link          http://www.matware.com.ar/
  * @license       GNU/GPL http://www.gnu.org/licenses/gpl-2.0-standalone.html
  */
-defined('JPATH_PLATFORM') or die;
+defined('_JEXEC') or die( 'Restricted access' );
 
 /**
  * OAuth Credentials base class for the Matware.Libraries
@@ -42,19 +42,25 @@ class MOauth2Credentials
 	 * @var    MOauth2TableCredentials  Connector object for table class.
 	 * @since  1.0
 	 */
-	public $_table;
+	public $table;
 
 	/**
 	 * @var    MOauth2CredentialsState  The current credential state.
 	 * @since  1.0
 	 */
-	public $_state;
+	public $state;
 
 	/**
 	 * @var    MOauth2ProtocolRequest   The current HTTP request.
 	 * @since  1.0
 	 */
-	public $_request;
+	public $request;
+
+	/**
+	 * @var    MOauth2CredentialsSigner   The current credential signer.
+	 * @since  1.0
+	 */
+	public $signal;
 
 	/**
 	 * Object constructor.
@@ -67,17 +73,17 @@ class MOauth2Credentials
 	public function __construct(MOauth2ProtocolRequest $request, MOauth2TableCredentials $table = null)
 	{
 		// Load the HTTP request
-		$this->_request = $request ? $request : new MOauth2ProtocolRequest;
+		$this->request = $request ? $request : new MOauth2ProtocolRequest;
 
 		// Setup the database object.
-		$this->_table = $table ? $table : JTable::getInstance('Credentials', 'MOauth2Table');
+		$this->table = $table ? $table : JTable::getInstance('Credentials', 'MOauth2Table');
 
 		// Assume the base state for any credentials object to be new.
-		$this->_state = new MOauth2CredentialsStateNew($this->_table);
+		$this->state = new MOauth2CredentialsStateNew($this->table);
 
 		// Setup the correct signer
-		$signature = isset($this->_request->signature_method) ? $this->_request->signature_method : 'PLAINTEXT';
-		$this->_signer = MOauth2CredentialsSigner::getInstance($signature);
+		$signature = isset($this->request->signature_method) ? $this->request->signature_method : 'PLAINTEXT';
+		$this->signer = MOauth2CredentialsSigner::getInstance($signature);
 	}
 
 	/**
@@ -93,7 +99,7 @@ class MOauth2Credentials
 	 */
 	public function authorise($resourceOwnerId)
 	{
-		$this->_state = $this->_state->authorise($resourceOwnerId);
+		$this->state = $this->state->authorise($resourceOwnerId);
 	}
 
 	/**
@@ -106,7 +112,7 @@ class MOauth2Credentials
 	 */
 	public function convert()
 	{
-		$this->_state = $this->_state->convert();
+		$this->state = $this->state->convert();
 	}
 
 	/**
@@ -119,7 +125,7 @@ class MOauth2Credentials
 	 */
 	public function deny()
 	{
-		$this->_state = $this->_state->deny();
+		$this->state = $this->state->deny();
 	}
 
 	/**
@@ -131,7 +137,7 @@ class MOauth2Credentials
 	 */
 	public function getCallbackUrl()
 	{
-		return $this->_state->callback_url;
+		return $this->state->callback_url;
 	}
 
 	/**
@@ -143,7 +149,7 @@ class MOauth2Credentials
 	 */
 	public function getClientId()
 	{
-		return $this->_state->client_id;
+		return $this->state->client_id;
 	}
 
 	/**
@@ -155,7 +161,7 @@ class MOauth2Credentials
 	 */
 	public function getClientSecret()
 	{
-		return $this->_state->client_secret;
+		return $this->state->client_secret;
 	}
 
 	/**
@@ -167,7 +173,7 @@ class MOauth2Credentials
 	 */
 	public function getTemporaryToken()
 	{
-		return $this->_state->temporary_token;
+		return $this->state->temporary_token;
 	}
 
 	/**
@@ -179,7 +185,7 @@ class MOauth2Credentials
 	 */
 	public function getAccessToken()
 	{
-		return $this->_state->access_token;
+		return $this->state->access_token;
 	}
 
 	/**
@@ -191,7 +197,7 @@ class MOauth2Credentials
 	 */
 	public function getRefreshToken()
 	{
-		return $this->_state->refresh_token;
+		return $this->state->refresh_token;
 	}
 
 	/**
@@ -204,7 +210,7 @@ class MOauth2Credentials
 	 */
 	public function getResourceOwnerId()
 	{
-		return $this->_state->resource_owner_id;
+		return $this->state->resource_owner_id;
 	}
 
 	/**
@@ -216,7 +222,7 @@ class MOauth2Credentials
 	 */
 	public function getType()
 	{
-		return (int) $this->_state->type;
+		return (int) $this->state->type;
 	}
 
 	/**
@@ -228,7 +234,7 @@ class MOauth2Credentials
 	 */
 	public function getExpirationDate()
 	{
-		return $this->_state->expiration_date;
+		return $this->state->expiration_date;
 	}
 
 	/**
@@ -240,7 +246,7 @@ class MOauth2Credentials
 	 */
 	public function getTemporaryExpirationDate()
 	{
-		return $this->_state->temporary_expiration_date;
+		return $this->state->temporary_expiration_date;
 	}
 
 	/**
@@ -255,11 +261,11 @@ class MOauth2Credentials
 	 * @since   1.0
 	 * @throws  LogicException
 	 */
-	public function initialise($clientId, $lifetime = 'PT1H')
+	public function initialise($clientId, $lifetime = 'PT4H')
 	{
-		$clientSecret = $this->_signer->secretDecode($this->_request->client_secret);
+		$clientSecret = $this->signer->secretDecode($this->request->client_secret);
 
-		$this->_state = $this->_state->initialise($clientId, $clientSecret, $this->_request->_fetchRequestUrl(), $lifetime);
+		$this->state = $this->state->initialise($clientId, $clientSecret, $this->request->_fetchRequestUrl(), $lifetime);
 	}
 
 	/**
@@ -273,7 +279,7 @@ class MOauth2Credentials
 	 */
 	public function doJoomlaAuthentication(MOauth2Client $client)
 	{
-		return $this->_signer->doJoomlaAuthentication($client, $this->_request);
+		return $this->signer->doJoomlaAuthentication($client, $this->request);
 	}
 
 	/**
@@ -287,19 +293,32 @@ class MOauth2Credentials
 	public function load()
 	{
 		// Initialise credentials_id
-		$this->_table->credentials_id = 0;
+		$this->table->credentials_id = 0;
 
 		// Load the credential
-		if ( isset($this->_request->response_type) && !isset($this->_request->access_token) )
+		if ( isset($this->request->response_type) && !isset($this->request->access_token) && !isset($this->request->refresh_token) )
 		{
 			// Get the correct client secret key
-			$key = $this->_signer->secretDecode($this->_request->client_secret);
+			$key = $this->signer->secretDecode($this->request->client_secret);
 
-			$load = $this->_table->loadBySecretKey($key, $this->_request->_fetchRequestUrl());
+			// Load the credential using secret key
+			$load = $this->table->loadBySecretKey($key, $this->request->_fetchRequestUrl());
 		}
-		elseif (isset($this->_request->access_token))
+		elseif (isset($this->request->refresh_token))
 		{
-			$load = $this->_table->loadByAccessToken($this->_request->access_token, $this->_request->_fetchRequestUrl());
+			// Clean all expired tokens
+			$this->table->clean();
+
+			// Load the credential using access token
+			$load = $this->table->loadByRefreshToken($this->request->refresh_token, $this->request->_fetchRequestUrl());
+		}
+		elseif (isset($this->request->access_token))
+		{
+			// Clean all expired tokens
+			$this->table->clean();
+
+			// Load the credential using access token
+			$load = $this->table->loadByAccessToken($this->request->access_token, $this->request->_fetchRequestUrl());
 		}
 
 		if ($load === false)
@@ -308,32 +327,32 @@ class MOauth2Credentials
 		}
 
 		// If nothing was found we will setup a new credential state object.
-		if (!$this->_table->credentials_id)
+		if (!$this->table->credentials_id)
 		{
-			$this->_state = new MOauth2CredentialsStateNew($this->_table);
+			$this->state = new MOauth2CredentialsStateNew($this->table);
 
 			return false;
 		}
 
 		// Cast the type for validation.
-		$this->_table->type = (int) $this->_table->type;
+		$this->table->type = (int) $this->table->type;
 
 		// If we are loading a temporary set of credentials load that state.
-		if ($this->_table->type === self::TEMPORARY)
+		if ($this->table->type === self::TEMPORARY)
 		{
-			$this->_state = new MOauth2CredentialsStateTemporary($this->_table);
+			$this->state = new MOauth2CredentialsStateTemporary($this->table);
 		}
 
 		// If we are loading a authorised set of credentials load that state.
-		elseif ($this->_table->type === self::AUTHORISED)
+		elseif ($this->table->type === self::AUTHORISED)
 		{
-			$this->_state = new MOauth2CredentialsStateAuthorised($this->_table);
+			$this->state = new MOauth2CredentialsStateAuthorised($this->table);
 		}
 
 		// If we are loading a token set of credentials load that state.
-		elseif ($this->_table->type === self::TOKEN)
+		elseif ($this->table->type === self::TOKEN)
 		{
-			$this->_state = new MOauth2CredentialsStateToken($this->_table);
+			$this->state = new MOauth2CredentialsStateToken($this->table);
 		}
 
 		// Unknown OAuth credential type.
@@ -354,7 +373,7 @@ class MOauth2Credentials
 	 */
 	public function clean()
 	{
-		$this->_table->clean();
+		$this->table->clean();
 	}
 
 	/**
@@ -367,6 +386,6 @@ class MOauth2Credentials
 	 */
 	public function revoke()
 	{
-		$this->_state = $this->_state->revoke();
+		$this->state = $this->state->revoke();
 	}
 }

@@ -1,9 +1,9 @@
 <?php
 /**
  * @version       $Id: 
- * @package       Matware.Component
+ * @package       Matware.Libraries
  * @subpackage    Webservices
- * @copyright     Copyright (C) 2004 - 2015 Matware - All rights reserved.
+ * @copyright     Copyright (C) 1996 - 2015 Matware - All rights reserved.
  * @author        Matias Aguirre
  * @email         maguirre@matware.com.ar
  * @link          http://www.matware.com.ar/
@@ -25,7 +25,6 @@ class com_webservicesInstallerScript
 	 */
 	public function preflight($route, JAdapterInstance $adapter)
 	{
-
 	}
  
 	/**
@@ -38,7 +37,6 @@ class com_webservicesInstallerScript
 	 */
 	public function postflight($route, JAdapterInstance $adapter)
 	{
-
 	}
  
 	/**
@@ -57,6 +55,9 @@ class com_webservicesInstallerScript
 		JFolder::copy("{$adminpath}/api", JPATH_ROOT."/api");
 		JFolder::copy("{$adminpath}/etc", JPATH_ROOT."/etc");
 
+		// Copy the CLI scripts
+		JFolder::copy("{$adminpath}/cli/WebsocketServer", JPATH_ROOT."/cli/WebsocketServer", '', true);
+
 		// Copy com_content component services
 		JFolder::copy("{$adminpath}/components/com_content/services", JPATH_ROOT."/components/com_content/services", '', true);
 		JFile::copy("{$adminpath}/components/com_content/services.json", JPATH_ROOT."/components/com_content/services.json");
@@ -71,7 +72,6 @@ class com_webservicesInstallerScript
 	 */
 	public function update(JAdapterInstance $adapter)
 	{
-
 	}
  
 	/**
@@ -81,6 +81,5 @@ class com_webservicesInstallerScript
 	 */
 	public function uninstall(JAdapterInstance $adapter)
 	{
-
 	}
 }

@@ -179,8 +179,8 @@ class JUpgradeproContent extends JUpgradepro
 			// @@ Duplicate entry for key 'idx_client_id_parent_id_alias_language'
 			if ($content->load(array('alias' => $row['alias'], 'catid' => $row['catid'])))
 			{
-				// Getting the duplicated alias
-				$alias = $this->getAlias('#__content', $row['alias']);
+				$content->reset();
+				$content->id = 0;
 				// Set the modified alias
 				$row['alias'] .= "-".rand(0, 99999999);
 			}

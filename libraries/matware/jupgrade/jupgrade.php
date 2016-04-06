@@ -20,21 +20,21 @@ defined('_JEXEC') or die;
  * @subpackage	com_jupgradepro
  */
 class JUpgradepro
-{	
+{
 	/**
-	 * @var      
+	 * @var
 	 * @since  3.0
 	 */
 	public $params = null;
 
 	/**
-	 * @var      
+	 * @var
 	 * @since  3.0
 	 */
 	public $ready = true;
-	
+
 	/**
-	 * @var      
+	 * @var
 	 * @since  3.0
 	 */
 	public $_db = null;
@@ -46,13 +46,13 @@ class JUpgradepro
 	public $_driver = null;
 
 	/**
-	 * @var      
+	 * @var
 	 * @since  3.0
 	 */
 	public $_version = null;
 
 	/**
-	 * @var      
+	 * @var
 	 * @since  3.0
 	 */
 	public $_total = null;
@@ -216,9 +216,9 @@ class JUpgradepro
 		if ($this->_step->first == true && $this->_step->cid == 0) {
 			try
 			{
-				if (method_exists($this, 'beforeHook')) { 
+				if (method_exists($this, 'beforeHook')) {
 					$this->beforeHook();
-				}		
+				}
 			}
 			catch (Exception $e)
 			{
@@ -233,7 +233,7 @@ class JUpgradepro
 
 		// Call to database method hook
 		if ( $method == 'database' OR $method == 'database_all') {
-			if (method_exists($this, 'databaseHook')) { 
+			if (method_exists($this, 'databaseHook')) {
 				$rows = $this->databaseHook($rows);
 			}
 		}
@@ -243,7 +243,7 @@ class JUpgradepro
 
 			$structureHook = 'structureHook_'.$name;
 
-			if (method_exists($this, $structureHook)) { 
+			if (method_exists($this, $structureHook)) {
 				try
 				{
 					$this->$structureHook();
@@ -302,7 +302,7 @@ class JUpgradepro
 		}
 
 		// Call after all steps hook
-		if ($this->_step->name == $this->_step->laststep && $this->_step->cache == 0 && $this->getTotal() == $this->_step->cid) {
+		if (empty($this->_step->laststep) && $this->_step->cache == 0 && $this->getTotal() == $this->_step->cid) {
 			$this->ready = $this->afterAllStepsHook();
 		}
 
@@ -347,7 +347,7 @@ class JUpgradepro
 	 * @throws	Exception
 	 */
 	protected function insertData($rows)
-	{	
+	{
 		$table = $this->getDestinationTable();
 
 		// Replacing the table name if xml exists
@@ -391,7 +391,7 @@ class JUpgradepro
 			}
 
 		}
-	
+
 		return !empty($this->_step->error) ? false : true;
 	}
 
@@ -404,13 +404,13 @@ class JUpgradepro
 	 */
 	public static function getConditionsHook()
 	{
-		$conditions = array();	
+		$conditions = array();
 
 		$conditions['select'] = '*';
 
 		$conditions['where'] = array();
 
-		return $conditions;	
+		return $conditions;
 	}
 
 	/*
@@ -423,7 +423,7 @@ class JUpgradepro
 	public function dataHook($rows)
 	{
 		// Do customisation of the params field here for specific data.
-		return $rows;	
+		return $rows;
 	}
 
 	/*
@@ -504,7 +504,7 @@ class JUpgradepro
 	}
 
 	/**
-	 * @return  string	The destination table key name  
+	 * @return  string	The destination table key name
 	 *
 	 * @since   3.0
 	 */
@@ -527,7 +527,7 @@ class JUpgradepro
 	public function valueExists($row, $fields)
 	{
 		$table = $this->getSourceTable();
-		$key = $this->getDestKeyName();	
+		$key = $this->getDestKeyName();
 		$value = $row->$key;
 
 		$conditions = array();
@@ -713,7 +713,7 @@ class JUpgradepro
 	}
 
 	/**
-	 * @return  string	The table name  
+	 * @return  string	The table name
 	 *
 	 * @since   3.0
 	 */
@@ -723,7 +723,7 @@ class JUpgradepro
 	}
 
 	/**
-	 * @return  string	The table name  
+	 * @return  string	The table name
 	 *
 	 * @since   3.0
 	 */
@@ -733,7 +733,7 @@ class JUpgradepro
 	}
 
 	/**
-	 * @return  string	The table name  
+	 * @return  string	The table name
 	 *
 	 * @since   3.0
 	 */

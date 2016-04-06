@@ -1,9 +1,9 @@
 <?php
 /**
- * @version       $Id: 
+ * @version       $Id:
  * @package       Matware.Libraries
  * @subpackage    OAuth2
- * @copyright     Copyright (C) 2004 - 2014 Matware - All rights reserved.
+ * @copyright     Copyright (C) 2004 - 2016 Matware - All rights reserved.
  * @author        Matias Aguirre
  * @email         maguirre@matware.com.ar
  * @link          http://www.matware.com.ar/

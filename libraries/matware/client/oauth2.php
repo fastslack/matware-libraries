@@ -1,15 +1,15 @@
 <?php
 /**
- * @version       $Id: 
+ * @version       $Id:
  * @package       Matware.Libraries
  * @subpackage    OAuth2
- * @copyright     Copyright (C) 2004 - 2014 Matware - All rights reserved.
+ * @copyright     Copyright (C) 2004 - 2016 Matware - All rights reserved.
  * @author        Matias Aguirre
  * @email         maguirre@matware.com.ar
  * @link          http://www.matware.com.ar/
  * @license       GNU/GPL http://www.gnu.org/licenses/gpl-2.0-standalone.html
  */
-defined('JPATH_PLATFORM') or die;
+defined('_JEXEC') or die( 'Restricted access' );
 
 jimport('joomla.environment.response');
 
@@ -69,21 +69,50 @@ class MClientOauth2
 	/**
 	 * Fetch the access token making the OAuth 2.0 method process
 	 *
-	 * @return	string	Returns the JSON response from the server
+	 * @return	object	Returns the token object
 	 *
 	 * @since 	1.0
 	 * @throws	Exception
 	 */
 	public function fetchAccessToken()
 	{
-		// Temporary token
-		$temporary = (object) $this->getTemporary();
+		// Execute the temporary token
+		try {
+			// Create the request array to be sent
+			$append = array(
+				'oauth_response_type' => 'temporary'
+			);
+
+			$code = (object) $this->getPostRequest($append);
+		} catch (RuntimeException $e) {
+			throw new RuntimeException($e->getMessage());
+		}
 
 		// Get authorization token
-		$authenticate = (object) $this->getAuthentication($temporary->oauth_code);
+		try {
+			// Create the request array to be sent
+			$append = array(
+				'oauth_grant_type' => 'authorization_code',
+				'oauth_response_type' => 'authorise',
+				'oauth_code' => $code->oauth_code
+			);
+
+			$code = (object) $this->getPostRequest($append);
+		} catch (RuntimeException $e) {
+			throw new RuntimeException($e->getMessage());
+		}
 
 		// Get access token
-		$token = (object) $this->getToken($authenticate->oauth_code);
+		try {
+			// Create the request array to be sent
+			$append = array(
+				'oauth_response_type' => 'token',
+				'oauth_code' => $code->oauth_code
+			);
+			$token = (object) $this->getPostRequest($append);
+		} catch (RuntimeException $e) {
+			throw new RuntimeException($e->getMessage());
+		}
 
 		return $token;
 	}
@@ -143,107 +172,19 @@ class MClientOauth2
 	}
 
 	/**
-	 * Encode the string with the key
+	 * Get the request for post
 	 *
-	 * @param   string   $string  The string to encode.
-	 * @param   string   $key     The key to encode the string.
-	 * @param   boolean  $base64  True to encode the strings.
-	 *
-	 * @return  string
-	 *
-	 * @since   1.0
-	 */
-	protected function encode($string, $key, $base64 = false)
-	{
-		if ($base64 === true)
-		{
-			$return = base64_encode($string) . ":" . base64_encode($key);
-		}
-		else
-		{
-			$return = "{$string}:{$key}";
-		}
-
-		return $return;
-	}
-
-	/**
-	 * Get the raw data for this part of the upgrade.
-	 *
-	 * @return	array	Returns a reference to the source data array.
-	 *
-	 * @since 	1.0
-	 * @throws	Exception
-	 */
-	public function getTemporary()
-	{
-		// Get the POST data
-		$data = $this->getPostData();
-		$data['oauth_response_type'] = 'temporary';
-
-		// Send the request
-		$response = $this->http->post($this->options->get('url'), $data, $this->getRestHeaders(true));
-
-		// Process the response
-		$token = $this->processRequest($response);
-
-		return $token;
-	}
-
-	/**
-	 * Get the authentication token
-	 *
-	 * @param   string  $code  The old token to get the access_token
+	 * @param   array  $append  The array with oauth parameters to append
 	 *
 	 * @return	string	Returns authentication token
 	 *
 	 * @since 	1.0
 	 * @throws	Exception
 	 */
-	public function getAuthentication($code)
+	public function getPostRequest($append = array())
 	{
 		// Get the headers
 		$data = $this->getPostData();
-
-		// Create the request array to be sent
-		$append = array(
-			'oauth_grant_type' => 'authorization_code',
-			'oauth_response_type' => 'authorise',
-			'oauth_code' => $code
-		);
-
-		// Append parameters to existing data
-		$data = $data + $append;
-
-		// Send the request
-		$response = $this->http->post($this->options->get('url'), $data, $this->getRestHeaders(true));
-
-		// Process the response
-		$token = $this->processRequest($response);
-
-		return $token;
-	}
-
-	/**
-	 * Get the access_token code to access resources
-	 *
-	 * @param   string  $code  The old token to get the access_token
-	 *
-	 * @return	string	The access token
-	 *
-	 * @since 	1.0
-	 * @throws	Exception
-	 */
-	public function getToken($code)
-	{
-		// Get the headers
-		$data = $this->getPostData();
-
-		// Create the request array to be sent
-		$append = array(
-			'oauth_response_type' => 'token',
-			'oauth_code' => $code
-		);
 
 		// Append parameters to existing data
 		$data = $data + $append;
@@ -268,31 +209,17 @@ class MClientOauth2
 	 */
 	public function refreshToken($token = null)
 	{
-		if (!$this->getOption('user_refresh'))
-		{
-			throw new RuntimeException('Refresh token is not supported for this OAuth instance.');
+		// Get access token
+		try {
+			// Create the request array to be sent
+			$append = array(
+				'oauth_response_type' => 'refresh_token',
+				'oauth_refresh_token' => $token
+			);
+			$token = (object) $this->getPostRequest($append);
+		} catch (RuntimeException $e) {
+			throw new RuntimeException($e->getMessage());
 		}
-
-		if (!$token)
-		{
-			$token = $this->getToken();
-
-			if (!array_key_exists('refresh_token', $token))
-			{
-				throw new RuntimeException('No refresh token is available.');
-			}
-
-			$token = $token['refresh_token'];
-		}
-
-		$data['grant_type'] = 'refresh_token';
-		$data['refresh_token'] = $token;
-		$data['client_id'] = $this->getOption('client_id');
-		$data['client_secret'] = $this->getOption('client_secret');
-		$response = $this->http->post($this->getOption('token_url'), $data);
-
-		// Process the response
-		$token = $this->processRequest($response);
 
 		return $token;
 	}
@@ -307,19 +234,29 @@ class MClientOauth2
 	 * @since 	1.0
 	 * @throws	Exception
 	 */
-	public function getResource($options = array())
+	public function getResource($options = array(), $resource = null)
 	{
 		// Get the headers
 		$data = $this->getPostData();
 
+		// Set the correct client_id for oauth2
 		$options['oauth_client_id'] = !empty($options['oauth_client_id']) ? $options['oauth_client_id'] : $data['oauth_client_id'];
+
+		// Set the http method
+		$method = !empty($options['method']) ? strtolower($options['method']) : "get";
+		unset($options['method']);
 
 		// Add GET parameters to URL
 		$url_query = http_build_query($options);
 		$url = $this->options->get('url') . "?{$url_query}";
 
 		// Send the request
-		$response = $this->http->get($url, $this->getRestHeaders());
+		if ($method == "get")
+		{
+			$response = $this->http->get($url, $this->getRestHeaders());
+		} else if ($method == "post") {
+			$response = $this->http->post($url, $resource, $this->getRestHeaders());
+		}
 
 		// Check the response
 		if ($response->code >= 200 && $response->code < 400)
@@ -473,5 +410,30 @@ class MClientOauth2
 		{
 			return true;
 		}
+	}
+
+	/**
+	 * Encode the string with the key
+	 *
+	 * @param   string   $string  The string to encode.
+	 * @param   string   $key     The key to encode the string.
+	 * @param   boolean  $base64  True to encode the strings.
+	 *
+	 * @return  string
+	 *
+	 * @since   1.0
+	 */
+	protected function encode($string, $key, $base64 = false)
+	{
+		if ($base64 === true)
+		{
+			$return = base64_encode($string) . ":" . base64_encode($key);
+		}
+		else
+		{
+			$return = "{$string}:{$key}";
+		}
+
+		return $return;
 	}
 }

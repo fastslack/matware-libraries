@@ -1,6 +1,6 @@
 <?php
 /**
- * @version       $Id: 
+ * @version       $Id:
  * @package       Matware.Libraries
  * @subpackage    MFormFieldSQL
  * @copyright     Copyright (C) 2004 - 2014 Matware - All rights reserved.
@@ -75,6 +75,7 @@ class JFormFieldMSQL extends JFormFieldList
 	{
 		switch ($name)
 		{
+			case 'header':
 			case 'keyField':
 			case 'valueField':
 			case 'translate':
@@ -99,6 +100,7 @@ class JFormFieldMSQL extends JFormFieldList
 	{
 		switch ($name)
 		{
+			case 'header':
 			case 'keyField':
 			case 'valueField':
 			case 'translate':
@@ -138,18 +140,40 @@ class JFormFieldMSQL extends JFormFieldList
 			{
 				// Get the query from the form
 				$query = array();
+				$defaults = array();
+
 				$query['select'] = (string) $this->element['sql_select'];
+
 				$query['from'] = (string) $this->element['sql_from'];
-				$query['where'] = (string) $this->element['sql_where'];
-				$query['join'] = $this->element['sql_join'] ? (string) $this->element['sql_join'] : '';
-				$query['group'] = $this->element['sql_group'] ? (string) $this->element['sql_group'] : '';
+
+				$query['join'] = isset($this->element['sql_join']) ? (string) $this->element['sql_join'] : '';
+
+				$query['where'] = isset($this->element['sql_where']) ? (string) $this->element['sql_where'] : '';
+
+				$query['group'] = isset($this->element['sql_group']) ? (string) $this->element['sql_group'] : '';
+
 				$query['order'] = (string) $this->element['sql_order'];
 
 				// Get the filters
-				$filter = $this->element['sql_filter'] ? (string) $this->element['sql_filter'] : '';
+				$filters = !empty($this->element['sql_filter']) ? explode(",", $this->element['sql_filter']) : '';
+
+				// Get the default value for query if empty
+				if (is_array($filters))
+				{
+					foreach ($filters as $key => $val)
+					{
+						$name = "sql_default_{$val}";
+						$attrib = (string) $this->element[$name];
+
+						if (!empty($attrib))
+						{
+							$defaults[$val] = $attrib;
+						}
+					}
+				}
 
 				// Process the query
-				$this->query = $this->processQuery($query, $filter);
+				$this->query = $this->processQuery($query, $filters, $defaults);
 			}
 
 			$this->keyField   = $this->element['key_field'] ? (string) $this->element['key_field'] : 'value';
@@ -197,6 +221,7 @@ class JFormFieldMSQL extends JFormFieldList
 			$query->group($conditions['group']);
 		}
 
+		// Where condition
 		if (!empty($conditions['where']))
 		{
 			$query->where($conditions['where']);
@@ -207,9 +232,17 @@ class JFormFieldMSQL extends JFormFieldList
 		{
 			$html_filters = JFactory::getApplication()->getUserStateFromRequest($this->context . '.filter', 'filter', array(), 'array');
 
-			$filters = explode(",", $filter);
+			if (empty($html_filters))
+			{
+				$html_filters = (array) JFactory::getApplication()->getUserState('filter');
+			}
 
-			foreach($filters as $k => $value)
+			if (!is_array($filter))
+			{
+				$filter = explode(",", $filter);
+			}
+
+			foreach($filter as $k => $value)
 			{
 				if (isset($html_filters[$value]))
 				{

@@ -1,15 +1,15 @@
 <?php
 /**
-* jUpgradePro
-*
-* @version $Id:
-* @package jUpgradePro
-* @copyright Copyright (C) 2004 - 2014 Matware. All rights reserved.
-* @author Matias Aguirre
-* @email maguirre@matware.com.ar
-* @link http://www.matware.com.ar/
-* @license GNU General Public License version 2 or later; see LICENSE
-*/
+ * jUpgradePro
+ *
+ * @version $Id:
+ * @package jUpgradePro
+ * @copyright Copyright (C) 2004 - 2014 Matware. All rights reserved.
+ * @author Matias Aguirre
+ * @email maguirre@matware.com.ar
+ * @link http://www.matware.com.ar/
+ * @license GNU General Public License version 2 or later; see LICENSE
+ */
 
 // Require the category class
 JLoader::register("JUpgradeproCategory", JPATH_LIBRARIES."/matware/jupgrade/category.php");
@@ -42,7 +42,7 @@ class JUpgradeproCategories extends JUpgradeproCategory
 		$conditions['where_or'] = $where_or;
 
 		$conditions['order'] = "id ASC, section ASC, ordering ASC";
-		
+
 		return $conditions;
 	}
 
@@ -86,33 +86,43 @@ class JUpgradeproCategories extends JUpgradeproCategory
 		// Getting the component parameter with global settings
 		$params = $this->getParams();
 		// Content categories
-		$this->section = 'com_content'; 
+		$this->section = 'com_content';
 		// Get the total
 		$total = count($rows);
 
 		// JTable::store() run an update if id exists so we create them first
 		if ($this->params->keep_ids == 1)
 		{
+			$l = 1;
+
 			foreach ($rows as $category)
 			{
 				$category = (array) $category;
 
 				// Check if id = 1
 				if ($category['id'] == 1) {
-					$rootidcategory = true;
 					continue;
 				}else{
 					$id = $category['id'];
 				}
 
 				$query = $this->_db->getQuery(true);
-				$query->insert('#__categories')->columns('`id`')->values($id);
+
+				//one of the high points of joomla API - colums as array and vaues as comma separated string-...
+				// anyway - let's insert some dummy data to prevent children of itself error..
+				$columns = array('`id`','`parent_id`','`lft`','`rgt`');
+				$values = array($id,1,$l,$l+1);
+				$values = implode(',' , $values);
+
+				$query->insert('#__categories')->columns($columns)->values($values);
 
 				try {
 					$this->_db->setQuery($query)->execute();
 				} catch (RuntimeException $e) {
 					throw new RuntimeException($e->getMessage());
 				}
+
+				$l = $l + 2 ;
 			}
 		}
 

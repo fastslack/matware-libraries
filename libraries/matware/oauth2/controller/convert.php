@@ -1,15 +1,15 @@
 <?php
 /**
- * @version       $Id: 
+ * @version       $Id:
  * @package       Matware.Libraries
  * @subpackage    OAuth2
- * @copyright     Copyright (C) 2004 - 2014 Matware - All rights reserved.
+ * @copyright     Copyright (C) 2004 - 2016 Matware - All rights reserved.
  * @author        Matias Aguirre
  * @email         maguirre@matware.com.ar
  * @link          http://www.matware.com.ar/
  * @license       GNU/GPL http://www.gnu.org/licenses/gpl-2.0-standalone.html
  */
-defined('JPATH_PLATFORM') or die;
+defined('_JEXEC') or die( 'Restricted access' );
 
 JLoader::register('MOauth2Credentials', JPATH_LIBRARIES.'/matware/oauth2/credentials.php');
 
@@ -68,18 +68,12 @@ class MOauth2ControllerConvert extends MOauth2ControllerBase
 		}
 
 		// Load the JUser class on application for this client
-		$this->app->loadIdentity($client->_identity);
+		$this->app->loadIdentity($client->identity);
 
 		// Ensure the credentials are authorised.
-		if ($credentials->getType() === MOauth2Credentials::TOKEN)
+		if ($credentials->getType() !== MOauth2Credentials::TOKEN && $credentials->getType() !== MOauth2Credentials::AUTHORISED)
 		{
 			$this->respondError(400, 'invalid_request', 'The token is not for a temporary credentials set.');
-		}
-
-		// Ensure the credentials are authorised.
-		if ($credentials->getType() !== MOauth2Credentials::AUTHORISED)
-		{
-			$this->respondError(400, 'invalid_request', 'The token has not been authorised by the resource owner.');
 		}
 
 		// Convert the credentials to valid Token credentials for requesting protected resources.
@@ -88,7 +82,7 @@ class MOauth2ControllerConvert extends MOauth2ControllerBase
 		// Build the response for the client.
 		$response = array(
 			'access_token' => $credentials->getAccessToken(),
-			'expires_in' => 'P60M',
+			'expires_in' => 'PT4H',
 			'refresh_token' => $credentials->getRefreshToken()
 		);
 
