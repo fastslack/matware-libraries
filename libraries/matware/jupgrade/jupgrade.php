@@ -209,7 +209,13 @@ class JUpgradepro
 	 */
 	protected function setDestinationData($rows = false)
 	{
+		// Initialise Joomla! application
+		$app = JFactory::getApplication('administrator');
+
+		// Get step name
 		$name = $this->_step->_getStepName();
+
+		// Get method
 		$method = $this->params->method;
 
 		// Before migrate hook
