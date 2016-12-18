@@ -20,7 +20,7 @@
 class JUpgradeproExtensions extends JUpgradepro
 {
 	/**
-	 * @var      
+	 * @var
 	 * @since  3.0
 	 */
 	public $xml = null;
@@ -63,7 +63,7 @@ class JUpgradeproExtensions extends JUpgradepro
 			if ($this->ready)
 			{
 				$this->ready = $this->migrateExtensionCustom();
-			}	
+			}
 
 		}
 		catch (Exception $e)
@@ -122,7 +122,7 @@ class JUpgradeproExtensions extends JUpgradepro
 	protected function migrateExtensionFolders()
 	{
 		$params = $this->getParams();
-	
+
 		if (!isset($this->state->folders))
 		{
 			$this->state->folders = new stdClass();
@@ -251,7 +251,7 @@ class JUpgradeproExtensions extends JUpgradepro
 	/**
 	 * Upgrade the components
 	 *
-	 * @return	
+	 * @return
 	 * @since	1.1.0
 	 * @throws	Exception
 	 */
@@ -275,7 +275,7 @@ class JUpgradeproExtensions extends JUpgradepro
 	/**
 	 * Upgrade the modules
 	 *
-	 * @return	
+	 * @return
 	 * @since	1.1.0
 	 * @throws	Exception
 	 */
@@ -415,7 +415,7 @@ class JUpgradeproExtensions extends JUpgradepro
 			return $option;
 		}
 
-		// Getting the plugins list
+		// Get the plugins list
 		$query = $this->_db->getQuery(true);
 		$query->select('*');
 		$query->from('#__extensions');
@@ -424,7 +424,7 @@ class JUpgradeproExtensions extends JUpgradepro
 		$query->where("enabled = 1");
 		$query->where("state = 0");
 
-		// Setting the query and getting the result
+		// Set the query and getting the result
 		$this->_db->setQuery($query);
 		$plugins = $this->_db->loadObjectList();
 

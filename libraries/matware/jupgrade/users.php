@@ -20,7 +20,7 @@
 class JUpgradeproUser extends JUpgradepro
 {
 	/**
-	 * @var      
+	 * @var
 	 * @since  3.0
 	 */
 	protected	$usergroup_map = array(
