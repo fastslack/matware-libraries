@@ -4,7 +4,7 @@
 *
 * @version $Id:
 * @package jUpgradePro
-* @copyright Copyright (C) 2004 - 2014 Matware. All rights reserved.
+* @copyright Copyright (C) 2004 - 2017 Matware. All rights reserved.
 * @author Matias Aguirre
 * @email maguirre@matware.com.ar
 * @link http://www.matware.com.ar/
@@ -126,6 +126,12 @@ class JUpgradepro
 
 		if (strpos($grant, 'DROP') == true || strpos($grant, 'ALL') == true) {
 			$this->canDrop = true;
+		}
+
+		// Prevent Joomla! uri errors
+		if (!isset($_SERVER['HTTP_HOST']))
+		{
+			$_SERVER['HTTP_HOST'] = '';
 		}
 	}
 
@@ -646,13 +652,18 @@ class JUpgradepro
 	 */
 	public function getAlias($table, $alias, $extension = false)
 	{
+		if (is_numeric ( $extension ))
+		{
+			$extension = 'com_content';
+		}
+
 		$query = $this->_db->getQuery(true);
 		$query->select('alias');
 		$query->from($table);
 		if ($extension !== false) {
 			$query->where("extension = '{$extension}'");
 		}
-		$query->where("alias RLIKE '^{$alias}$'", "OR")->where("alias RLIKE '^{$alias}[~]$'");
+		$query->where("alias RLIKE '^{$alias}$' OR alias RLIKE '^{$alias}[~]$'");
 		$query->order('alias DESC');
 		$query->limit(1);
 		$this->_db->setQuery($query);

@@ -174,11 +174,11 @@ class JUpgradeproCategory extends JUpgradepro
 			$row['alias'] = JFilterOutput::stringURLSafe($row['title']);
 		}
 
-		// Check if has duplicated aliases
-		$alias = $this->getAlias('#__categories', $row['alias'], $row['extension']);
-
 		// Transliterate title
 		$title_ascii = $this->url_slug($row['title']);
+
+		// Check if has duplicated aliases
+		$alias = $this->getAlias('#__categories', $row['alias'], $row['extension']);
 
 		// Prevent MySQL duplicate error
 		// @@ Duplicate entry for key 'idx_client_id_parent_id_alias_language'
