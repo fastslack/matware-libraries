@@ -33,11 +33,11 @@ class JUpgradeproMenu extends JUpgradeproMenus
 	public static function getConditionsHook()
 	{
 		$conditions = array();
-		
+
 		$conditions['as'] = "m";
-		
+
 		$conditions['select'] = 'm.*';
-		
+
 		$conditions['where'] = array();
 		$conditions['where'][] = "m.alias != 'root'";
 		$conditions['where'][] = "m.id > 101";
@@ -45,6 +45,49 @@ class JUpgradeproMenu extends JUpgradeproMenus
 		$conditions['order'] = "m.id ASC";
 
 		return $conditions;
+	}
+
+	/**
+	 * A hook to be able to modify params prior as they are converted to JSON.
+	 *
+	 * @param	object	$object	A reference to the parameters as an object.
+	 *
+	 * @return	void
+	 * @since	3.6.2
+	 * @throws	Exception
+	 */
+	protected function convertParamsHook(&$object)
+	{
+		// Add 3.6 parameters
+		if (version_compare(JUpgradeproHelper::getVersion('new'), '3.6', '>='))
+		{
+			$object->featured_categories = isset($object->featured_categories)  ? $object->featured_categories : "[]";
+			$object->layout_type = isset($object->layout_type)  ? $object->layout_type : "blog";
+			$object->num_leading_articles = isset($object->num_leading_articles)  ? $object->num_leading_articles : 1;
+			$object->num_intro_articles = isset($object->num_intro_articles)  ? $object->num_intro_articles : 3;
+			$object->num_columns = isset($object->num_columns)  ? $object->num_columns : 3;
+			$object->num_links = isset($object->num_links)  ? $object->num_links : 0;
+			$object->multi_column_order = isset($object->multi_column_order)  ? $object->multi_column_order : 1;
+			$object->orderby_pri = isset($object->orderby_pri)  ? $object->orderby_pri : "";
+			$object->orderby_sec = isset($object->orderby_sec)  ? $object->orderby_sec : "front";
+			$object->order_date = isset($object->order_date)  ? $object->order_date : "";
+			$object->show_pagination = isset($object->show_pagination)  ? $object->show_pagination : "";
+			$object->show_pagination_results = isset($object->show_pagination_results)  ? $object->show_pagination_results : 1;
+			$object->info_block_position = isset($object->info_block_position)  ? $object->info_block_position : "";
+			$object->info_block_show_title = isset($object->info_block_show_title)  ? $object->info_block_show_title : "";
+			$object->show_parent_category = isset($object->show_parent_category)  ? $object->show_parent_category : "";
+			$object->link_parent_category = isset($object->link_parent_category)  ? $object->link_parent_category : "";
+			$object->link_author = isset($object->link_author)  ? $object->link_author : "";
+			$object->show_publish_date = isset($object->show_publish_date)  ? $object->show_publish_date : "";
+			$object->show_readmore_title = isset($object->show_readmore_title)  ? $object->show_readmore_title : "";
+			$object->show_tags = isset($object->show_tags)  ? $object->show_tags : "";
+			$object->show_feed_link = isset($object->show_feed_link)  ? $object->show_feed_link : 1;
+			//$object->menu-anchor_title = isset($object->menu-anchor_title)  ? $object->menu-anchor_title : "";
+			//$object->menu-anchor_css = isset($object->menu-anchor_css)  ? $object->menu-anchor_css : "";
+			$object->menu_text = isset($object->menu_text)  ? $object->menu_text : 1;
+			$object->menu_show = isset($object->menu_show)  ? $object->menu_show : 1;
+			$object->robots = isset($object->robots)  ? $object->robots : "";
+		}
 	}
 
 	/**
@@ -59,11 +102,11 @@ class JUpgradeproMenu extends JUpgradeproMenus
 		$params = $this->getParams();
 		$table	= $this->getDestinationTable();
 
-		// Getting the extensions id's of the new Joomla installation
+		// Get extensions id's of the new Joomla installation
 		$query = "SELECT extension_id, element"
 		." FROM #__extensions";
 		$this->_db->setQuery($query);
-		$extensions_ids = $this->_db->loadObjectList('element');	
+		$extensions_ids = $this->_db->loadObjectList('element');
 
 		$total = count($rows);
 
@@ -72,7 +115,10 @@ class JUpgradeproMenu extends JUpgradeproMenus
 			// Convert the array into an object.
 			$row = (object) $row;
 
-			// Getting the duplicated alias
+			// Convert params
+			$this->convertParams($row->params);
+
+			// Get the duplicated alias
 			$alias = $this->getAlias('#__menu', $row->alias);
 
 			// Prevent MySQL duplicate error

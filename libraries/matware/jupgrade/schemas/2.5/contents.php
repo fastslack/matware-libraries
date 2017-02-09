@@ -20,6 +20,24 @@
 class JUpgradeproContent extends JUpgradepro
 {
 	/**
+	 * A hook to be able to modify params prior as they are converted to JSON.
+	 *
+	 * @param	object	$object	A reference to the parameters as an object.
+	 *
+	 * @return	void
+	 * @since	3.6.2
+	 * @throws	Exception
+	 */
+	protected function convertParamsHook(&$object)
+	{
+		// Add 3.1 parameters
+		if (version_compare(JUpgradeproHelper::getVersion('new'), '3.1', '>='))
+		{
+			$object->tags = isset($object->tags)  ? $object->tags : "";
+		}
+	}
+
+	/**
 	* Sets the data in the destination database.
 	*
 	* @return	void
@@ -35,7 +53,7 @@ class JUpgradeproContent extends JUpgradepro
 		$query = "SELECT * FROM #__jupgradepro_categories WHERE section REGEXP '^[\\-\\+]?[[:digit:]]*\\.?[[:digit:]]*$' AND old > 0";
 		$this->_db->setQuery($query);
 		$catidmap = $this->_db->loadObjectList('old');
-		
+
 		// Find uncategorised category id
 		$query = "SELECT id FROM #__categories WHERE extension='com_content' AND path='uncategorised' LIMIT 1";
 		$this->_db->setQuery($query);
@@ -56,10 +74,9 @@ class JUpgradeproContent extends JUpgradepro
 			$row['introtext'] = !empty($row['introtext']) ? $row['introtext'] : "###BLANK###";
 			$row['fulltext'] = !empty($row['fulltext']) ? $row['fulltext'] : "###BLANK###";
 
-			// Add tags if Joomla! is greater than 3.1
-			if (version_compare(JUpgradeproHelper::getVersion('new'), '3.1', '>=')) {
-				$row['metadata'] = $row['metadata'] . "\ntags=";
-			}
+			// Convert metadata
+			$metadata = isset($row->metadata) ? $row->metadata : new stdClass;
+			$this->convertMetadata($metadata);
 
 			// JTable:store() run an update if id exists into the object so we create them first
 			$object = new stdClass();

@@ -690,7 +690,9 @@ class JUpgradepro
 			$this->convertParamsHook($object);
 		}
 
-		return json_encode($object);
+		$return = json_encode($object);
+
+		return $return;
 	}
 
 	/**
@@ -703,6 +705,44 @@ class JUpgradepro
 	 * @throws	Exception
 	 */
 	protected function convertParamsHook(&$object)
+	{
+		// Do customisation of the params field here for specific data.
+	}
+
+	/**
+	 * Converts the metadata fields into a JSON string.
+	 *
+	 * @param	string	$params	The source text definition for the parameter field.
+	 *
+	 * @return	string	A JSON encoded string representation of the parameters.
+	 * @since	  3.6.2
+	 * @throws	Exception from the convertMetadataHook.
+	 */
+	protected function convertMetadata($params, $hook = true)
+	{
+		$temp	= new JRegistry($params);
+		$object	= $temp->toObject();
+
+		// Fire the hook in case this parameter field needs modification.
+		if ($hook === true) {
+			$this->convertMetadataHook($object);
+		}
+
+		$return = json_encode($object);
+
+		return $return;
+	}
+
+	/**
+	 * A hook to be able to modify params prior as they are converted to JSON.
+	 *
+	 * @param	object	$object	A reference to the parameters as an object.
+	 *
+	 * @return	void
+	 * @since   3.6.2
+	 * @throws	Exception
+	 */
+	protected function convertMetadataHook(&$object)
 	{
 		// Do customisation of the params field here for specific data.
 	}
