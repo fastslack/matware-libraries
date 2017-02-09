@@ -652,6 +652,8 @@ class JUpgradepro
 	 */
 	public function getAlias($table, $alias, $extension = false)
 	{
+		$alias = strtolower($alias);
+
 		if (is_numeric ( $extension ))
 		{
 			$extension = 'com_content';
