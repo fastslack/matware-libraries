@@ -113,7 +113,7 @@ class JUpgradeproContent extends JUpgradepro
 		$query = "SELECT * FROM #__jupgradepro_categories WHERE section REGEXP '^[\\-\\+]?[[:digit:]]*\\.?[[:digit:]]*$' AND old > 0";
 		$this->_db->setQuery($query);
 		$catidmap = $this->_db->loadObjectList('old');
-		
+
 		// Find uncategorised category id
 		$query = "SELECT id FROM #__categories WHERE extension='com_content' AND path='uncategorised' LIMIT 1";
 		$this->_db->setQuery($query);
@@ -171,19 +171,8 @@ class JUpgradeproContent extends JUpgradepro
 			// Get the asset table
 			$content = JTable::getInstance('Content', 'JTable', array('dbo' => $this->_db));
 
-			// Aliases
-			$row['alias'] = !empty($row['alias']) ? $row['alias'] : "###BLANK###";
-			$row['alias'] = JApplication::stringURLSafe($row['alias']);
-
-			// Prevent MySQL duplicate error
-			// @@ Duplicate entry for key 'idx_client_id_parent_id_alias_language'
-			if ($content->load(array('alias' => $row['alias'], 'catid' => $row['catid'])))
-			{
-				$content->reset();
-				$content->id = 0;
-				// Set the modified alias
-				$row['alias'] .= "-".rand(0, 99999999);
-			}
+			// Fix duplicated alias
+			$row['alias'] = $this->fixAlias('#__content', $row);
 
 			// Bind data to save content
 			if (!$content->bind($row)) {

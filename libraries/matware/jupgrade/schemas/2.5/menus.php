@@ -118,12 +118,8 @@ class JUpgradeproMenu extends JUpgradeproMenus
 			// Convert params
 			$this->convertParams($row->params);
 
-			// Get the duplicated alias
-			$alias = $this->getAlias('#__menu', $row->alias);
-
-			// Prevent MySQL duplicate error
-			// @@ Duplicate entry for key 'idx_client_id_parent_id_alias_language'
-			$row->alias = (!empty($alias)) ? $alias."~" : $row->alias;
+			// Fix duplicated alias
+			$row->alias = $this->fixAlias('#__menu', $row);
 
 			// Get new/old id's values
 			$menuMap = new stdClass();

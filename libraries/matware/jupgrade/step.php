@@ -4,7 +4,7 @@
 *
 * @version $Id:
 * @package jUpgradePro
-* @copyright Copyright (C) 2004 - 2013 Matware. All rights reserved.
+* @copyright Copyright (C) 2004 - 2016 Matware. All rights reserved.
 * @author Matias Aguirre
 * @email maguirre@matware.com.ar
 * @link http://www.matware.com.ar/
@@ -19,7 +19,7 @@ defined('_JEXEC') or die;
  * @package		jUpgradePro
  */
 class JUpgradeproStep
-{	
+{
 	public $id = null;
 	public $name = null;
 	public $title = null;
@@ -53,9 +53,9 @@ class JUpgradeproStep
 
 	public $debug = '';
 	public $error = '';
-	
+
 	/**
-	 * @var      
+	 * @var
 	 * @since  3.0
 	 */
 	protected $_db = null;
@@ -111,7 +111,7 @@ class JUpgradeproStep
 	}
 
 	/**
-	 * Method to set the parameters. 
+	 * Method to set the parameters.
 	 *
 	 * @param   array  $parameters  The parameters to set.
 	 *
@@ -136,7 +136,7 @@ class JUpgradeproStep
 	}
 
 	/**
-	 * Method to get the parameters. 
+	 * Method to get the parameters.
 	 *
 	 * @return  array  $parameters  The parameters of this object.
 	 *
@@ -207,7 +207,7 @@ class JUpgradeproStep
 				$this->debug = "{{{2}}}";
 				$this->first = false;
 
-			} else if ($this->cache > 0) { 
+			} else if ($this->cache > 0) {
 
 				$this->start = $this->cid;
 				$this->stop = ($this->start - 1) + $limit;
@@ -360,7 +360,7 @@ class JUpgradeproStep
 	}
 
 	/**
-	 * 
+	 *
 	 *
 	 * @return  boolean  True if the user and pass are authorized
 	 *
@@ -410,7 +410,7 @@ class JUpgradeproStep
 	}
 
 	/**
-	 * @return  string	The step name  
+	 * @return  string	The step name
 	 *
 	 * @since   3.0
 	 */

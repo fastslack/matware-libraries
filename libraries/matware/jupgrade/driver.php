@@ -4,31 +4,32 @@
 *
 * @version $Id:
 * @package jUpgradePro
-* @copyright Copyright (C) 2004 - 2013 Matware. All rights reserved.
+* @copyright Copyright (C) 2004 - 2017 Matware. All rights reserved.
 * @author Matias Aguirre
 * @email maguirre@matware.com.ar
 * @link http://www.matware.com.ar/
 * @license GNU General Public License version 2 or later; see LICENSE
 */
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die;
 
 /**
  * jUpgradePro driver class
  *
- * @package		MatWare
- * @subpackage	com_jupgrade
+ * @package			jUpgradePro
+ * @subpackage	com_jupgradepro
  */
 class JUpgradeproDriver
-{	
+{
 	/**
-	 * @var      
+	 * @var
 	 * @since  3.0
 	 */
 	public $params = null;
-	
+
 	/**
-	 * @var      
+	 * @var
 	 * @since  3.0
 	 */
 	public $_db = null;
@@ -110,12 +111,31 @@ class JUpgradeproDriver
 	}
 
 	/**
-	 * @return  string	The step name  
+	 * @return  string	The step name
 	 *
 	 * @since   3.0
 	 */
 	public function _getStepName()
 	{
 		return $this->_step->name;
+	}
+
+	/**
+	 * Save drivers errors
+	 *
+	 * @return  true
+	 *
+	 * @since   3.6.2
+	 */
+	public function saveError($error)
+	{
+		$query = $this->_db->getQuery(true);
+		$query->insert('#__jupgradepro_errors')
+			->columns('`message`')
+			->values($this->_db->quote($error));
+		$this->_db->setQuery($query);
+		$this->_db->execute();
+
+		return true;
 	}
 }

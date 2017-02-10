@@ -4,7 +4,7 @@
 *
 * @version $Id:
 * @package jUpgradePro
-* @copyright Copyright (C) 2004 - 2014 Matware. All rights reserved.
+* @copyright Copyright (C) 2004 - 2017 Matware. All rights reserved.
 * @author Matias Aguirre
 * @email maguirre@matware.com.ar
 * @link http://www.matware.com.ar/
@@ -89,6 +89,7 @@ class JUpgradeproDriverRest extends JUpgradeproDriver
 		if ($code == 500) {
 			throw new Exception('COM_JUPGRADEPRO_ERROR_REST_REQUEST');
 		} else {
+			//$this->saveError($request->body);
 			return ($code == 200 || $code == 301) ? $request->body : $code;
 		}
 	}

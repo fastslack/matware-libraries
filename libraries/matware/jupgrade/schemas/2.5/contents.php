@@ -90,19 +90,8 @@ class JUpgradeproContent extends JUpgradepro
 			// Get the asset table
 			$content = JTable::getInstance('Content', 'JTable', array('dbo' => $this->_db));
 
-			// Aliases
-			$row['alias'] = !empty($row['alias']) ? $row['alias'] : "###BLANK###";
-			$row['alias'] = JApplication::stringURLSafe($row['alias']);
-
-			// Prevent MySQL duplicate error
-			// @@ Duplicate entry for key 'idx_client_id_parent_id_alias_language'
-			if ($content->load(array('alias' => $row['alias'], 'catid' => $row['catid'])))
-			{
-				// Getting the duplicated alias
-				$alias = $this->getAlias('#__content', $row['alias']);
-				// Set the modified alias
-				$row['alias'] .= "-".rand(0, 99999999);
-			}
+			// Fix duplicated alias
+			$row['alias'] = $this->fixAlias('#__content', $row);
 
 			// Bind data to save content
 			if (!$content->bind($row)) {
