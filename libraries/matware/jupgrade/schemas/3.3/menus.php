@@ -33,11 +33,11 @@ class JUpgradeproMenu extends JUpgradeproMenus
 	public static function getConditionsHook()
 	{
 		$conditions = array();
-		
+
 		$conditions['as'] = "m";
-		
+
 		$conditions['select'] = 'm.*';
-		
+
 		$conditions['where'] = array();
 		$conditions['where'][] = "m.alias != 'root'";
 		$conditions['where'][] = "m.id > 101";
@@ -63,7 +63,7 @@ class JUpgradeproMenu extends JUpgradeproMenus
 		$query = "SELECT extension_id, element"
 		." FROM #__extensions";
 		$this->_db->setQuery($query);
-		$extensions_ids = $this->_db->loadObjectList('element');	
+		$extensions_ids = $this->_db->loadObjectList('element');
 
 		$total = count($rows);
 
@@ -72,12 +72,8 @@ class JUpgradeproMenu extends JUpgradeproMenus
 			// Convert the array into an object.
 			$row = (object) $row;
 
-			// Getting the duplicated alias
-			$alias = $this->getAlias('#__menu', $row->alias);
-
-			// Prevent MySQL duplicate error
-			// @@ Duplicate entry for key 'idx_client_id_parent_id_alias_language'
-			$row->alias = (!empty($alias)) ? $alias."~" : $row->alias;
+			// Fix duplicated alias
+			$row->alias = $this->fixAlias('#__menu', $row);
 
 			// Get new/old id's values
 			$menuMap = new stdClass();

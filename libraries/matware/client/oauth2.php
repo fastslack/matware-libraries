@@ -256,6 +256,10 @@ class MClientOauth2
 			$response = $this->http->get($url, $this->getRestHeaders());
 		} else if ($method == "post") {
 			$response = $this->http->post($url, $resource, $this->getRestHeaders());
+		} else if ($method == "put") {
+			$response = $this->http->put($url, $resource, $this->getRestHeaders());
+		} else if ($method == "delete") {
+			$response = $this->http->delete($url, $this->getRestHeaders());
 		}
 
 		// Check the response

@@ -4,7 +4,7 @@
 *
 * @version $Id:
 * @package jUpgradePro
-* @copyright Copyright (C) 2004 - 2016 Matware. All rights reserved.
+* @copyright Copyright (C) 2004 - 2017 Matware. All rights reserved.
 * @author Matias Aguirre
 * @email maguirre@matware.com.ar
 * @link http://www.matware.com.ar/
@@ -77,8 +77,9 @@ class JUpgradeproStep
 			$this->_table = '#__jupgradepro_extensions';
 		}
 
-		// Get the old version
+		// Get the old and new version
 		$this->old_ver = JUpgradeproHelper::getVersion('old');
+		$this->new_ver = JUpgradeproHelper::getVersion('new');
 
 		// Load the last step from database
 		if ($name !== false)
@@ -282,18 +283,20 @@ class JUpgradeproStep
 			$query->where("e.status != 2");
 		}
 
-		$query->where("e.version = {$this->_db->quote($this->old_ver)}");
+		$new_ver = str_replace(".", "", $this->new_ver);
+		$old_ver = str_replace(".", "", $this->old_ver);
+		$query->where("{$old_ver} BETWEEN e.from AND e.to");
+		$query->where("{$new_ver} BETWEEN e.from AND e.to");
 
-		$query->order('e.id ASC');
+		//$query->order('e.from DESC, e.id ASC');
 		$query->limit(1);
 
 		$this->_db->setQuery($query);
-		$step = $this->_db->loadAssoc();
 
-		// Check for query error.
-		$error = $this->_db->getErrorMsg();
-		if ($error) {
-			return false;
+		try {
+			$step = $this->_db->loadAssoc();
+		} catch (RuntimeException $e) {
+			throw new RuntimeException($e->getMessage());
 		}
 
 		// Check if step is an array
@@ -305,18 +308,25 @@ class JUpgradeproStep
 		$query->clear();
 
 		// Select last step
-		$query->select('name');
-		$query->from($this->_table);
-		$query->where("status = 0");
+		$query->select('t.name');
+		$query->from($this->_table . ' AS t');
+		$query->where("t.status = 0");
 		if ($this->_table == '#__jupgradepro_extensions_tables') {
 			$query->where("element = '{$step['element']}'");
 		}
-		$query->where("version = {$this->_db->quote($this->old_ver)}");
-		$query->order('id DESC');
+
+		$query->where("t.from <= {$old_ver}");
+
+		$query->order('t.id DESC');
 		$query->limit(1);
 
 		$this->_db->setQuery($query);
-		$step['laststep'] = $this->_db->loadResult();
+
+		try {
+			$step['laststep'] = $this->_db->loadResult();
+		} catch (RuntimeException $e) {
+			throw new RuntimeException($e->getMessage());
+		}
 
 		// Set the parameters
 		$this->setParameters($step);
@@ -333,27 +343,29 @@ class JUpgradeproStep
 	public function _updateStep() {
 
 		$query = $this->_db->getQuery(true);
-		$query->update($this->_table);
+		$query->update($this->_table . ' AS t');
 
 		$columns = array('status', 'cache', 'total', 'start', 'stop', 'first', 'debug');
 
 		foreach ($columns as $column) {
 			if (!empty($this->$column)) {
-				$query->set("{$column} = '{$this->$column}'");
+				$query->set("t.{$column} = '{$this->$column}'");
 			}
 		}
 
-		$query->where("name = {$this->_db->quote($this->name)}");
-		$query->where("version = {$this->_db->quote($this->old_ver)}");
+		$query->where("t.name = {$this->_db->quote($this->name)}");
+
+		//$old_ver = str_replace(".", "", $this->old_ver);
+		//$new_ver = str_replace(".", "", $this->new_ver);
+
+		//$query->where("t.from <= {$old_ver}");
+		//$query->where("t.to >= {$new_ver}");
 
 		// Execute the query
-		$this->_db->setQuery($query)->execute();
-
-		// Check for query error.
-		$error = $this->_db->getErrorMsg();
-
-		if ($error) {
-			throw new Exception($error);
+		try {
+			$this->_db->setQuery($query)->execute();
+		} catch (RuntimeException $e) {
+			throw new RuntimeException($e->getMessage());
 		}
 
 		return true;
@@ -372,13 +384,15 @@ class JUpgradeproStep
 		$name = $this->_getStepName();
 
 		$query = $this->_db->getQuery(true);
-		$query->update($this->_table);
-		$query->set("`cid` = '{$id}'");
-		$query->where("name = {$this->_db->quote($name)}");
-		$query->where("version = {$this->_db->quote($this->old_ver)}");
+		$query->update($this->_table . ' AS t');
+		$query->set("t.cid = '{$id}'");
+		$query->where("t.name = {$this->_db->quote($name)}");
 
-		// Execute the query
-		return $this->_db->setQuery($query)->execute();
+		try {
+			return $this->_db->setQuery($query)->execute();
+		} catch (RuntimeException $e) {
+			throw new RuntimeException($e->getMessage());
+		}
 	}
 
 	/**

@@ -659,7 +659,10 @@ class JUpgradepro
 		}
 
 		// Transliterate title
-		$title_ascii = JFilterOutput::stringURLSafe($this->url_slug($row['title']));
+		if (isset($row['title']) && $row['title'] != "")
+		{
+			$title_ascii = JFilterOutput::stringURLSafe($this->url_slug($row['title']));
+		}
 
 		// Check if extension exists
 		$row['extension'] = isset($row['extension']) ? $row['extension'] : false;
@@ -672,7 +675,7 @@ class JUpgradepro
 		if (!empty($alias))
 		{
 			$row['alias'] = $alias."-".rand(0, 999999);
-		} else {
+		} else if (isset($title_ascii)) {
 			$alias = $this->getAlias($table, $title_ascii, $row['extension']);
 			$row['alias'] = (!empty($alias)) ? $alias."-".rand(0, 999999) : $title_ascii;
 		}
