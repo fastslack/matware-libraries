@@ -107,6 +107,20 @@ class ApiApplicationWeb extends JApplicationWeb
 	}
 
 	/**
+	 * Check the client interface by name.
+	 *
+	 * @param   string  $identifier  String identifier for the application interface
+	 *
+	 * @return  boolean  True if this application is of the given type client interface.
+	 *
+	 * @since   3.7.0
+	 */
+	public function isClient($identifier)
+	{
+		return $this->_clientId == $identifier;
+	}
+
+	/**
 	 * Allows the application to load a custom or default database driver.
 	 *
 	 * @param   JDatabaseDriver  $driver  An optional database driver object. If omitted, the application driver is created.
@@ -194,6 +208,37 @@ class ApiApplicationWeb extends JApplicationWeb
 	}
 
 	/**
+	 * Returns the application JRouter object.
+	 *
+	 * @param   string  $name     The name of the application.
+	 * @param   array   $options  An optional associative array of configuration settings.
+	 *
+	 * @return  JRouter|null  A JRouter object
+	 *
+	 * @since   11.1
+	 * @deprecated  4.0
+	 */
+	public static function getRouter($name = null, array $options = array())
+	{
+		if (!isset($name))
+		{
+			$app = JFactory::getApplication();
+			//$name = $app->getName();
+		}
+
+		try
+		{
+			$router = JRouter::getInstance('site', $options);
+		}
+		catch (Exception $e)
+		{
+			return null;
+		}
+
+		return $router;
+	}
+
+	/**
 	 * Allows the application to load a custom or default dispatcher.
 	 *
 	 * The logic and options for creating this object are adequately generic for default cases
@@ -238,6 +283,8 @@ class ApiApplicationWeb extends JApplicationWeb
 			// Set the controller prefix, add maps, and execute the appropriate controller.
 			$this->input = new JInputJson;
 			$this->document = new ApiDocumentHalJson($documentOptions);
+
+			// @@ TODO: Fix uri.route do not work for DELETE method
 			$this->router->setControllerPrefix('ApiServices')
 				->setDefaultController('Root')
 				->addMaps($this->maps)
@@ -356,7 +403,7 @@ class ApiApplicationWeb extends JApplicationWeb
 		$this->fetchMaps(JPATH_ADMINISTRATOR . '/components');
 
 		// Merge the main services file.
-		$this->loadMaps(json_decode(file_get_contents(JPATH_CONFIGURATION . '/services.json'), true));
+		$this->loadMaps(json_decode(file_get_contents(JPATH_WS_CONFIGURATION . '/services.json'), true));
 
 		return $this;
 	}
@@ -429,4 +476,73 @@ class ApiApplicationWeb extends JApplicationWeb
 		return $body;
 	}
 
+	/**
+	 * Enqueue a system message.
+	 *
+	 * @param   string  $msg   The message to enqueue.
+	 * @param   string  $type  The message type. Default is message.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.2
+	 */
+	public function enqueueMessage($msg, $type = 'message')
+	{
+		// Don't add empty messages.
+		if (!strlen($msg))
+		{
+			return;
+		}
+
+		// Enqueue the message.
+		$this->_messageQueue[] = array('message' => $msg, 'type' => strtolower($type));
+	}
+
+	/**
+	 * Get template method
+	 *
+	 * @return  void
+	 *
+	 * @since   3.2
+	 */
+	public function getTemplate()
+	{
+		return false;
+	}
+
+	/**
+	 * Get User State
+	 *
+	 * @return  void
+	 *
+	 * @since   3.2
+	 */
+	public function getUserState()
+	{
+		return false;
+	}
+
+	/**
+	 * Is administrator
+	 *
+	 * @return  void
+	 *
+	 * @since   3.2
+	 */
+	public function isAdmin()
+	{
+		return false;
+	}
+
+	/**
+	 * Is administrator
+	 *
+	 * @return  void
+	 *
+	 * @since   3.2
+	 */
+	public function toString()
+	{
+		return false;
+	}
 }

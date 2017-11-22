@@ -186,7 +186,6 @@ abstract class ApiControllerBase extends JControllerBase implements ApiControlle
 		}
 
 		return $this;
-
 	}
 
 	/**
@@ -203,11 +202,58 @@ abstract class ApiControllerBase extends JControllerBase implements ApiControlle
 
 			$response = array(
 				'error' => 400,
-				'error_description' => 'You no have the right permission for this resource'
+				'error_description' => 'You havent the right permission for this resource.'
 			);
 
 			echo $this->app->setBody(json_encode($response))->sendHeaders()->getBody();
-			exit;	
+			exit;
 		}
+	}
+
+	/**
+	 * Create a mailer object
+	 *
+	 * @return  JMail object
+	 *
+	 * @see     JMail
+	 * @since   11.1
+	 */
+	protected static function getMailer()
+	{
+		$app = JFactory::getApplication();
+
+		$smtpauth = ($app->get('smtpauth') == 0) ? null : 1;
+		$smtpuser = $app->get('smtpuser');
+		$smtppass = $app->get('smtppass');
+		$smtphost = $app->get('smtphost');
+		$smtpsecure = $app->get('smtpsecure');
+		$smtpport = $app->get('smtpport');
+		$mailfrom = $app->get('mailfrom');
+		$fromname = $app->get('fromname');
+		$mailer = $app->get('mailer');
+
+		// Create a JMail object
+		$mail = JMail::getInstance();
+
+		// Set default sender without Reply-to
+		$mail->SetFrom(JMailHelper::cleanLine($mailfrom), JMailHelper::cleanLine($fromname), 0);
+
+		// Default mailer is to use PHP's mail function
+		switch ($mailer)
+		{
+			case 'smtp':
+				$mail->useSmtp($smtpauth, $smtphost, $smtpuser, $smtppass, $smtpsecure, $smtpport);
+				break;
+
+			case 'sendmail':
+				$mail->IsSendmail();
+				break;
+
+			default:
+				$mail->IsMail();
+				break;
+		}
+
+		return $mail;
 	}
 }

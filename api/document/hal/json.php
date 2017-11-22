@@ -104,7 +104,7 @@ class ApiDocumentHalJson extends JDocument
 		}
 
 		// Return it as a JSON string.
-		return json_encode($hal);
+		return json_encode($hal, JSON_NUMERIC_CHECK);
 	}
 
 	/**

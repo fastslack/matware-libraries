@@ -344,7 +344,7 @@ class ApiApplicationResourcemap
 			if ($first == "_")
 			{
 				continue;
-			}	
+			}
 
 			// Source definition fields must be in the form type:definition.
 			// Locate first occurrence of a colon.
@@ -399,7 +399,7 @@ class ApiApplicationResourcemap
 		// Append the parameters fields
 		foreach ($paramsData as $objName => $object)
 		{
-			$targetData[$objName] = json_encode($object);
+			$targetData[$objName] = json_encode($object, JSON_NUMERIC_CHECK);
 		}
 
 		return $targetData;
