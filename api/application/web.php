@@ -133,16 +133,16 @@ class ApiApplicationWeb extends JApplicationWeb
 	{
 		if ($driver === null)
 		{
+			$config = new JConfig();
+
 			$this->db = JDatabaseDriver::getInstance(
 				array(
-					'driver' => $this->get('dbtype'),
-					'host' => $this->get('host'),
-					'user' => $this->get('user'),
-					'password' => $this->get('password'),
-					'database' => $this->get('db'),
-					'prefix' => $this->get('dbprefix'),
-//					'schema' => $this->get('db_schema'),
-//					'port' => $this->get('db_port')
+					'driver' => $config->dbtype,
+					'host' => $config->host,
+					'user' => $config->user,
+					'password' => $config->password,
+					'database' => $config->db,
+					'prefix' => $config->dbprefix
 				)
 			);
 
