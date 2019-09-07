@@ -276,7 +276,7 @@ class PlgAuthenticationOAuth2 extends JPlugin
 	 */
 	public function getToken($user, $password)
 	{
-		$url = JURI::base() . 'api/joomla:articles';
+		$url = JURI::base() . 'api/mets:login';
 
 		$options = array();
 		$options['username'] = $user->username;
