@@ -76,9 +76,9 @@ if (!defined('JPATH_CACHE'))
 {
 	define('JPATH_CACHE', '/tmp/cache');
 }
-if (!defined('JPATH_CONFIGURATION'))
+if (!defined('JPATH_WS_CONFIGURATION'))
 {
-	define('JPATH_CONFIGURATION', $JAPIHOME . '/etc');
+	define('JPATH_WS_CONFIGURATION', $JAPIHOME . '/etc');
 }
 if (!defined('JPATH_API'))
 {
@@ -96,6 +96,11 @@ if (!defined('JDEBUG'))
 {
 	define('JDEBUG', $JAPIHOME . '/tmp');
 }
+
+// Pre-Load configuration. Don't remove the Output Buffering due to BOM issues, see JCode 26026
+ob_start();
+require_once JPATH_ROOT. '/configuration.php';
+ob_end_clean();
 
 try
 {
