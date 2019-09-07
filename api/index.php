@@ -106,6 +106,18 @@ ob_start();
 require_once JPATH_ROOT. '/configuration.php';
 ob_end_clean();
 
+// Fire up the Platform importer.
+if (file_exists(JPATH_LIBRARIES . '/import.php'))
+{
+	require JPATH_LIBRARIES . '/import.php';
+}
+
+// Import the Joomla! CMS
+if (file_exists(JPATH_LIBRARIES . '/cms.php'))
+{
+	require_once JPATH_LIBRARIES . '/cms.php';
+}
+
 try
 {
 	// Fire up the API importer.
