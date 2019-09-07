@@ -76,6 +76,10 @@ if (!defined('JPATH_CACHE'))
 {
 	define('JPATH_CACHE', '/tmp/cache');
 }
+if (!defined('JPATH_CONFIGURATION'))
+{
+	define('JPATH_CONFIGURATION', $JAPIHOME);
+}
 if (!defined('JPATH_WS_CONFIGURATION'))
 {
 	define('JPATH_WS_CONFIGURATION', $JAPIHOME . '/etc');
